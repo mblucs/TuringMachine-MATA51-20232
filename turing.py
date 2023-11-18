@@ -159,12 +159,12 @@ class TuringMachineDescription:
                 raise ParserException(f"Unknown final state: '{state}'.")
         if self.initial not in self.states:
             raise ParserException(f"Unknown initial state '{self.initial}'.")
-        if self.blank not in self.tapes:
-            raise ParserException(f"Unknown black symbol '{self.blank}'.")
-        for sym in self.inputs:
-            if sym not in self.tapes:
-                raise ParserException(
-                    f"Input symbol '{self.blank}' is not a tape symbol.")
+        # if self.blank not in self.tapes:
+        #     raise ParserException(f"Unknown black symbol '{self.blank}'.")
+        # for sym in self.inputs:
+        #     if sym not in self.tapes:
+        #         raise ParserException(
+        #             f"Input symbol '{self.blank}' is not a tape symbol.")
         for edge in self.trans:
             if edge.old not in self.states:
                 raise ParserException(
