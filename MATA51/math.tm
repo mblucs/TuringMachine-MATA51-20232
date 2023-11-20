@@ -1,4 +1,6 @@
-; soma 2 unarios: 111+11=11111
+; soma 2 unarios: 
+; Entrada:  111+11
+; Saída:    11111
 
 
 ; the finite set of states

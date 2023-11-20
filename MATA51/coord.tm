@@ -1,11 +1,13 @@
-; Converte coordenadas para horas (unario)
+; Converte coordenadas para horas (unario). cada 15º representam 1h
+; Entrada: 75
+; Saída: 11111
 
 
 ; the finite set of states
 #Q = {q0, unit, end, dec, cent}
 
 ; the finite set of input symbols
-#S = {0,1,2,3,4,5,6,7,8,9,°,L,O}
+#S = {0,1,2,3,4,5,6,7,8,9}
 
 ; the complete set of tape symbols
 #G = {0,1,2,3,4,5,6,7,8,9,_}

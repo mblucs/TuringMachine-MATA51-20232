@@ -1,4 +1,6 @@
 ; converte de decimal pra unario
+; Entrada: 5
+; Saída: 11111
 
 ; the finite set of states
 #Q = {q0, unit, dec, end}
