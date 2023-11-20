@@ -1,16 +1,16 @@
 ; Converte coordenadas para horas (unario). cada 15º representam 1h
-; Entrada: 75
-; Saída: 11111
+; Entrada: 75L  |  15O
+; Saída: +11111  |  -1
 
 
 ; the finite set of states
 #Q = {q0, unit, end, dec, cent}
 
 ; the finite set of input symbols
-#S = {0,1,2,3,4,5,6,7,8,9}
+#S = {0,1,2,3,4,5,6,7,8,9,L,O, _}
 
 ; the complete set of tape symbols
-#G = {0,1,2,3,4,5,6,7,8,9,_}
+#G = {0,1,2,3,4,5,6,7,8,9,_, L,O, +,-}
 
 ; the start state
 #q0 = q0
@@ -54,5 +54,10 @@ dec 61 51 rr unit   ;165
 
 ; centena
 cent 11 _1 rr q0
-
 dec __ __ ** end
+;end 0* _* rr end
+
+; Leste(+) ou Oeste(-)?
+unit L_ L+ lr unit
+unit O_ O- lr unit
+
