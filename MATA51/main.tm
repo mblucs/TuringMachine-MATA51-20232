@@ -1,21 +1,24 @@
-; Converte coordenadas para horas (unario). cada 15º representam 1h
+; Recebe 2 coordenadas no formato e retorna os fusos horários
 
-; ./emulator/turing ./MATA51/coord.tm 75L -v    
-; Entrada: 75L  |  15O
+; ./emulator/turing ./MATA51/2 Tapes/main.tm 75L_15O -v    
+; Entrada: 75L_15O
 ; Saída: +11111  |  -1
 
 
+; Entrada: 75L  |  15O
+
+
 ; the finite set of states
-#Q = {q0, unit, end, dec, cent}
+#Q = {cont, unit, end, dec, cent}
 
 ; the finite set of input symbols
 #S = {0,1,2,3,4,5,6,7,8,9,L,O,_}
 
 ; the complete set of tape symbols
-#G = {0,1,2,3,4,5,6,7,8,9,_, L,O, +,-}
+#G = {0,1,2,3,4,5,6,7,8,9,_,L,O,+,-}
 
 ; the start state
-#q0 = q0
+#q0 = cont
 
 ; the blank symbol
 #B = _
@@ -28,15 +31,16 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
-q0 ** ** r* q0
-q0 __ __ l* unit
+; #### coord.tm
+
+cont ** ** r* cont
+cont __ __ l* unit
 
 ; --- Após subtração, corrige ultimo digito (unidade)
 unit 5_ 01 l* dec    
 unit 0_ 0_ l* dec
 
 unit 01 51 *r unit
-
 
 dec 11 _1 r* end ; fim
 
@@ -53,13 +57,13 @@ dec 01 91 l* cent   ;105
 dec 31 21 rr unit   ;135
 dec 61 51 rr unit   ;165
 
-
 ; centena
-cent 11 _1 rr q0
+cent 11 _1 rr cont
 dec __ __ ** end
 ;end 0* _* rr end
 
 ; Leste(+) ou Oeste(-)?
-unit L_ L+ lr unit
-unit O_ O- lr unit
+unit L_ _+ lr unit
+unit O_ _- lr unit
 
+; após
