@@ -47,7 +47,7 @@ signal n_ ++ r* num
 ; Percorre até o final do NUMERO
 num 1* 1* r* num
 
-; adição: preenche o espaço com 1 e retira do final
+; Adição: preenche o espaço com 1 e retira do final
 num nn 11 r* borrow 
 num ++ 11 r* borrow
 
@@ -56,19 +56,19 @@ borrow _1 _1 l* sub
 
 sub 11 __ ll sub
 
+; Subtração. adiciona os numero do destino na f2, e depois subtrai f1 por f2
+num n+ __ rr add  
+num +n __ rr add
 
-num n+ __ rr add    ;n11n1 = +11-1 = +1
+
 add 1_ _1 rr add
 
 add __ __ ll sub
 sub _1 _1 l* sub
 
-
 sub 1_ 1_ r* end
 
 
-
-;origem em f2, destino em f1, - origem +destino
-;num +n ?? rr add
+; +11+1 = -11+1 = -1
 
 
