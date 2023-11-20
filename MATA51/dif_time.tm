@@ -43,7 +43,6 @@ signal +_ nn r* num
 signal n_ ++ r* num
 
 
-
 ; Percorre até o final do NUMERO
 num 1* 1* r* num
 
@@ -60,7 +59,6 @@ sub 11 __ ll sub
 num n+ __ rr add  
 num +n __ rr add
 
-
 add 1_ _1 rr add
 
 add __ __ ll sub
@@ -69,6 +67,10 @@ sub _1 _1 l* sub
 sub 1_ 1_ r* end
 
 
-; +11+1 = -11+1 = -1
+; Subtração excedeu o valor original. troca o sinal.
 
+sub n1 +1 r* add
+sub +1 n1 r* add
+
+add _1 1_ rr add
 
