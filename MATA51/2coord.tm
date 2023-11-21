@@ -9,13 +9,13 @@
 
 
 ; the finite set of states
-#Q = {Coord, cont, unit, dec, cent, end, init, writeF1}
+#Q = {Coord, cont, unit, dec, cent, endCoord, initF1, initF2, TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
-#S = {C,0,1,2,3,4,5,6,7,8,9,L,O,_,#,W}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the complete set of tape symbols
-#G = {C,0,1,2,3,4,5,6,7,8,9,_,L,O,+,-,#,W}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the start state
 #q0 = Coord
@@ -70,7 +70,7 @@ unit O_ _- lr unit
 
 Coord 0* _* r* Coord
 Coord _* _* r* Coord
-Coord #_ W_ rl init
+Coord #_ C_ rl initF2
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -79,17 +79,82 @@ Coord #_ W_ rl init
 ; #### Transição
 
 ; volta pro inicio da fita
-init ** ** *l init
-init __ __ l* init      ; terminou de escrever na fita, procura qual a função a executar
-init W_ __ *r writeF1   ; função de escrita
+initF2 ** ** *l initF2
+initF2 __ __ l* initF2      ; terminou de escrever na fita, procura qual a função a executar
+initF2 C_ __ *r endCoord   ; escreve resultado das coordenadas
 
-; copia resultado da fita 2 na 1 fita
 
-writeF1 _+ +_ rr writeF1  
-writeF1 _- -_ rr writeF1  
-writeF1 _1 1_ rr writeF1  
-writeF1 __ __ ** end
+; copia resultado da fita 2 na 1 fita - resultado das coordenadas
+
+endCoord _+ +_ rr endCoord  
+endCoord _- -_ rr endCoord  
+endCoord _1 1_ rr endCoord  
+endCoord __ __ ** TimeZone
 
 ;-------------------------------
 
+
+
+;-------------------------------
+; #### dif_time.tm
+
+TimeZone __ __ ll initF1
+initF1 ** ** l* initF1
+initF1 __ __ r* signal     
+
+;captura sinal no horario da cidade de origem
+
+signal +_ -- r* num
+signal -_ ++ r* num
+
+
+; Percorre até o final do NUMERO
+num 1* 1* r* num
+
+; Adição: preenche o espaço com 1 e retira do final
+num -- 11 r* borrow 
+num ++ 11 r* borrow
+
+borrow 11 11 r* borrow
+borrow _1 _1 l* sub
+
+sub 11 __ ll sub
+
+; Subtração. adiciona os numero do destino na f2, e depois subtrai f1 por f2
+num -+ __ rr add  
+num +- __ rr add
+
+add 1_ _1 rr add
+
+add __ __ ll sub
+sub _1 _1 l* sub
+
+sub 1_ 1_ r* end
+
+
+; Subtração excedeu o valor original. troca o sinal.
+
+sub -1 +1 r* add
+sub +1 -1 r* add
+
+add _1 1_ rr add
+
+
+
+; #### FIM dif_time.tm
+;-------------------------------
+
+
+;-------------------------------
+; #### hora de saida
+
+; #### FIM 
+;-------------------------------
+
+
+;-------------------------------
+; #### duração do voo
+
+; #### FIM 
+;-------------------------------
 
