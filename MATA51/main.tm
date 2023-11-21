@@ -9,7 +9,7 @@
 
 
 ; the finite set of states
-#Q = {Coord, cont, unit, dec, cent, end, endCoord}
+#Q = {Coord, cont, unit, dec, cent, end, init, writeF1}
 
 ; the finite set of input symbols
 #S = {C,0,1,2,3,4,5,6,7,8,9,L,O,_,#}
@@ -33,6 +33,7 @@
 
 Coord C_ __ r* cont
 
+;-------------------------------
 ; #### coord.tm
 
 cont ** ** r* cont
@@ -44,7 +45,7 @@ unit 0_ 0_ l* dec
 
 unit 01 51 *r unit
 
-dec 11 _1 rr endCoord ; fim
+dec 11 _1 rr Coord ; fim
 
 dec 3_ 11 r* unit   ;30
 dec 6_ 41 r* unit   ;60
@@ -61,13 +62,26 @@ dec 61 51 rr unit   ;165
 
 ; centena
 cent 11 _1 rr cont
-dec __ __ ** endCoord
+dec __ __ ** Coord
 
 ; Leste(+) ou Oeste(-)?
 unit L_ _+ lr unit
 unit O_ _- lr unit
 
-endCoord 0* _* r* endCoord
-endCoord _* _* r* endCoord
-endCoord C* C* ** Coord
-endCoord #_ #_ ** end
+Coord 0* _* r* Coord
+Coord _* _* r* Coord
+Coord #_ __ rl init
+
+; #### FIM coord.tm
+;-------------------------------
+
+; volta pro inicio da fita
+init ** ** ll init
+init __ __ rr writeF1
+
+; copia resultado da fita 2 na 1 fita
+
+writeF1 _+ +_ rr writeF1  
+writeF1 _- -_ rr writeF1  
+writeF1 _1 1_ rr writeF1  
+writeF1 __ __ ** end
