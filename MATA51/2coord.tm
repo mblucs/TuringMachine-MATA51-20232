@@ -12,10 +12,10 @@
 #Q = {Coord, cont, unit, dec, cent, end, init, writeF1}
 
 ; the finite set of input symbols
-#S = {C,0,1,2,3,4,5,6,7,8,9,L,O,_,#}
+#S = {C,0,1,2,3,4,5,6,7,8,9,L,O,_,#,W}
 
 ; the complete set of tape symbols
-#G = {C,0,1,2,3,4,5,6,7,8,9,_,L,O,+,-, #}
+#G = {C,0,1,2,3,4,5,6,7,8,9,_,L,O,+,-,#,W}
 
 ; the start state
 #q0 = Coord
@@ -70,7 +70,7 @@ unit O_ _- lr unit
 
 Coord 0* _* r* Coord
 Coord _* _* r* Coord
-Coord #_ __ rl init
+Coord #_ W_ rl init
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -79,8 +79,9 @@ Coord #_ __ rl init
 ; #### Transição
 
 ; volta pro inicio da fita
-init ** ** ll init
-init __ __ rr writeF1
+init ** ** *l init
+init __ __ l* init      ; terminou de escrever na fita, procura qual a função a executar
+init W_ __ *r writeF1   ; função de escrita
 
 ; copia resultado da fita 2 na 1 fita
 

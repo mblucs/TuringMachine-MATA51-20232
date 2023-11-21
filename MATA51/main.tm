@@ -9,13 +9,13 @@
 
 
 ; the finite set of states
-#Q = {Coord, cont, unit, dec, cent, endCoord, init, writeF1, DiffTime, signal, num, borrow, sub, add, end}
+#Q = {Coord, cont, unit, dec, cent, endCoord, initF1, initF2, TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,W}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#, W}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the start state
 #q0 = Coord
@@ -70,7 +70,7 @@ unit O_ _- lr unit
 
 Coord 0* _* r* Coord
 Coord _* _* r* Coord
-Coord #_ __ rl init
+Coord #_ C_ rl initF2
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -79,16 +79,17 @@ Coord #_ __ rl init
 ; #### Transição
 
 ; volta pro inicio da fita
-init ** ** ll init
-init __ __ rr writeF1
+initF2 ** ** *l initF2
+initF2 __ __ l* initF2      ; terminou de escrever na fita, procura qual a função a executar
+initF2 C_ __ *r endCoord   ; escreve resultado das coordenadas
 
-; copia resultado da fita 2 na 1 fita
 
-writeF1 _+ +_ rr writeF1  
-writeF1 _- -_ rr writeF1  
-writeF1 _1 1_ rr writeF1  
-writeF1 __ __ ** endCoord
+; copia resultado da fita 2 na 1 fita - resultado das coordenadas
 
+endCoord _+ +_ rr endCoord  
+endCoord _- -_ rr endCoord  
+endCoord _1 1_ rr endCoord  
+endCoord __ __ ** TimeZone
 
 ;-------------------------------
 
@@ -97,6 +98,9 @@ writeF1 __ __ ** endCoord
 ;-------------------------------
 ; #### dif_time.tm
 
+TimeZone __ __ ll initF1
+initF1 ** ** l* initF1
+initF1 __ __ r* signal     
 
 ;captura sinal no horario da cidade de origem
 
