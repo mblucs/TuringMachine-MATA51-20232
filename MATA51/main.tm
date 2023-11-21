@@ -1,7 +1,7 @@
 ; Recebe 2 coordenadas no formato e retorna os fusos horários
 
-; ./emulator/turing ./MATA51/2 Tapes/main.tm 75L_15O -v    
-; Entrada: 75L_15O
+; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
+; Entrada: C75L_C15O
 ; Saída: +11111  |  -1
 
 
@@ -9,16 +9,16 @@
 
 
 ; the finite set of states
-#Q = {cont, unit, end, dec, cent}
+#Q = {Coord, cont, unit, dec, cent, end, endCoord}
 
 ; the finite set of input symbols
-#S = {0,1,2,3,4,5,6,7,8,9,L,O,_}
+#S = {C,0,1,2,3,4,5,6,7,8,9,L,O,_,#}
 
 ; the complete set of tape symbols
-#G = {0,1,2,3,4,5,6,7,8,9,_,L,O,+,-}
+#G = {C,0,1,2,3,4,5,6,7,8,9,_,L,O,+,-, #}
 
 ; the start state
-#q0 = cont
+#q0 = Coord
 
 ; the blank symbol
 #B = _
@@ -31,6 +31,8 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
+Coord C_ __ r* cont
+
 ; #### coord.tm
 
 cont ** ** r* cont
@@ -42,7 +44,7 @@ unit 0_ 0_ l* dec
 
 unit 01 51 *r unit
 
-dec 11 _1 r* end ; fim
+dec 11 _1 rr endCoord ; fim
 
 dec 3_ 11 r* unit   ;30
 dec 6_ 41 r* unit   ;60
@@ -59,11 +61,13 @@ dec 61 51 rr unit   ;165
 
 ; centena
 cent 11 _1 rr cont
-dec __ __ ** end
-;end 0* _* rr end
+dec __ __ ** endCoord
 
 ; Leste(+) ou Oeste(-)?
 unit L_ _+ lr unit
 unit O_ _- lr unit
 
-; após
+endCoord 0* _* r* endCoord
+endCoord _* _* r* endCoord
+endCoord C* C* ** Coord
+endCoord #_ #_ ** end
