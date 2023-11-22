@@ -1,10 +1,10 @@
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C15L_C15O_P1_D2
+; Entrada: C15L_C15O_P1_D2#
 ; Saída: +11_P1_D2
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, writeH, initD, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
@@ -170,10 +170,22 @@ decH 1_ _1 rr decH
 decH 2_ 11 rr decH
 decH __ ** ** endH
 
+endH __ __ r* endH
+endH 0_ __ r* endH
+endH D_ D_ ll writeH    ; identifica prox entrada
+
+writeH _1 1_ ll writeH
+writeH _P __ r* initD
+
+
 ;-------------------------------
 
+; Converte duração do voo de decimal para unario
 
+initD 1_ 1_ r* initD
+initD D_ _D rr unitH
 
+endH #_ #_ ll endH
 
 ;-------------------------------
 ; #### hora de partida (P)
