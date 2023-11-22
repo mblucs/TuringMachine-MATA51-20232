@@ -4,13 +4,13 @@
 
 
 ; the finite set of states
-#Q = {cont, unit, dec, cent, next, endC, writeC, init, TimeZone, signal, num, borrow, sub, add, end, initF1}
+#Q = {cont, unit, dec, cent, next, endC, writeC, init, signal, num, one, sub, add, endT}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 
 ; the start state
 #q0 = next
@@ -19,7 +19,7 @@
 #B = _
 
 ; the set of final states
-#F = {end}
+#F = {endT}
 
 ; the number of tapes
 #N = 2
@@ -104,11 +104,11 @@ signal -_ ++ r* num
 num 1* 1* r* num
 
 ; Adição: preenche o espaço com 1 e retira do final
-num -- 11 r* borrow 
-num ++ 11 r* borrow
+num -- 11 r* one 
+num ++ 11 r* one
 
-borrow 11 11 r* borrow
-borrow _1 _1 l* sub
+one 11 11 r* one
+one _1 _1 l* sub
 
 sub 11 __ ll sub
 
@@ -121,7 +121,7 @@ add 1_ _1 rr add
 add __ __ ll sub
 sub _1 _1 l* sub
 
-sub 1_ 1_ r* end
+sub 1_ 1_ r* endT
 
 
 ; Subtração excedeu o valor original. troca o sinal.
@@ -131,10 +131,16 @@ sub +1 -1 r* add
 
 add _1 1_ rr add
 
-
-
 ; #### FIM dif_time.tm
 ;-------------------------------
+
+; TRANSIÇÃO
+; Remove espaços em branco, e substitui o D pelo sinal (define a direção do voo + ou-)
+
+
+
+
+; Converte numeros decimais para unarios (horas)
 
 
 ;-------------------------------
