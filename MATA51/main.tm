@@ -103,7 +103,7 @@ signal -_ ++ r* num
 ; Percorre até o final do NUMERO
 num 1* 1* r* num
 
-; Adição: preenche o espaço com 1 e retira do final
+; Adição: adiciona 1 no espaço e subtrai no final
 num -- 11 r* one 
 num ++ 11 r* one
 
@@ -121,15 +121,14 @@ add 1_ _1 rr add
 add __ __ ll sub
 sub _1 _1 l* sub
 
-sub 1_ 1_ r* endT
-
-
-; Subtração excedeu o valor original. troca o sinal.
+; Resultado negativo. Inverte o sinal
 
 sub -1 +1 r* add
 sub +1 -1 r* add
 
 add _1 1_ rr add
+
+sub 1_ 1_ r* endT
 
 ; #### FIM dif_time.tm
 ;-------------------------------
