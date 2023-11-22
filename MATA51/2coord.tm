@@ -1,15 +1,15 @@
 ; Recebe 2 coordenadas no formato e retorna os fusos horários
 
-; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C75L_C15O
-; Saída: +11111  |  -1
+; ./emulator/turing ./MATA51/2coord.tm C15L_C15O_# -v    
+; Entrada: C15L_C15O_#
+; Saída: -11
 
 
 ; Entrada: 75L  |  15O
 
 
 ; the finite set of states
-#Q = {Coord, cont, unit, dec, cent, endCoord, initF1, initF2, TimeZone, signal, num, borrow, sub, add, end}
+#Q = {cont, unit, dec, cent, next, endC, writeC,TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
@@ -18,7 +18,7 @@
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the start state
-#q0 = Coord
+#q0 = next
 
 ; the blank symbol
 #B = _
@@ -31,7 +31,7 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
-Coord C_ __ r* cont
+next C_ __ r* cont  ; Inicia função das coordenadas 
 
 ;-------------------------------
 ; #### coord.tm
@@ -45,7 +45,7 @@ unit 0_ 0_ l* dec
 
 unit 01 51 *r unit
 
-dec 11 _1 rr Coord ; fim
+dec 11 _1 rr next ; fim
 
 dec 3_ 11 r* unit   ;30
 dec 6_ 41 r* unit   ;60
@@ -62,15 +62,11 @@ dec 61 51 rr unit   ;165
 
 ; centena
 cent 11 _1 rr cont
-dec __ __ ** Coord
+dec __ __ ** next
 
 ; Leste(+) ou Oeste(-)?
 unit L_ _+ lr unit
 unit O_ _- lr unit
-
-Coord 0* _* r* Coord
-Coord _* _* r* Coord
-Coord #_ C_ rl initF2
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -78,18 +74,20 @@ Coord #_ C_ rl initF2
 ;-------------------------------
 ; #### Transição
 
-; volta pro inicio da fita
-initF2 ** ** *l initF2
-initF2 __ __ l* initF2      ; terminou de escrever na fita, procura qual a função a executar
-initF2 C_ __ *r endCoord   ; escreve resultado das coordenadas
+; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
+next 0* _* r* next
+next _* _* r* next
+next #_ #_ ll endC ; # representa o fim das coordenadas
 
+; volta pro inicio da fita para escrever resultado
+endC _* _* ll endC
+endC __ __ ** writeC    
 
-; copia resultado da fita 2 na 1 fita - resultado das coordenadas
-
-endCoord _+ +_ rr endCoord  
-endCoord _- -_ rr endCoord  
-endCoord _1 1_ rr endCoord  
-endCoord __ __ ** TimeZone
+writeC __ __ rr writeC ; Começa a escrever
+writeC _+ +_ rr writeC  
+writeC _- -_ rr writeC  
+writeC _1 1_ rr writeC  
+writeC #_ #_ rr TimeZone
 
 ;-------------------------------
 
@@ -97,47 +95,6 @@ endCoord __ __ ** TimeZone
 
 ;-------------------------------
 ; #### dif_time.tm
-
-TimeZone __ __ ll initF1
-initF1 ** ** l* initF1
-initF1 __ __ r* signal     
-
-;captura sinal no horario da cidade de origem
-
-signal +_ -- r* num
-signal -_ ++ r* num
-
-
-; Percorre até o final do NUMERO
-num 1* 1* r* num
-
-; Adição: preenche o espaço com 1 e retira do final
-num -- 11 r* borrow 
-num ++ 11 r* borrow
-
-borrow 11 11 r* borrow
-borrow _1 _1 l* sub
-
-sub 11 __ ll sub
-
-; Subtração. adiciona os numero do destino na f2, e depois subtrai f1 por f2
-num -+ __ rr add  
-num +- __ rr add
-
-add 1_ _1 rr add
-
-add __ __ ll sub
-sub _1 _1 l* sub
-
-sub 1_ 1_ r* end
-
-
-; Subtração excedeu o valor original. troca o sinal.
-
-sub -1 +1 r* add
-sub +1 -1 r* add
-
-add _1 1_ rr add
 
 
 

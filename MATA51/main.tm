@@ -12,10 +12,10 @@
 #Q = {Coord, cont, unit, dec, cent, endCoord, initF1, initF2, TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#S = {_,C,P,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#G = {_,C,P,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
 
 ; the start state
 #q0 = Coord
@@ -146,7 +146,10 @@ add _1 1_ rr add
 
 
 ;-------------------------------
-; #### hora de saida
+; #### hora de partida (P)
+
+; #### Converter pra unario
+
 
 ; #### FIM 
 ;-------------------------------
