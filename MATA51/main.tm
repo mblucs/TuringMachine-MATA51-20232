@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {cont, unit, dec, cent, next, endC, writeC, init, signal, num, one, sub, add, endT}
+#Q = {cont, unit, dec, cent, next, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
@@ -19,7 +19,7 @@
 #B = _
 
 ; the set of final states
-#F = {endT}
+#F = {end}
 
 ; the number of tapes
 #N = 2
@@ -82,10 +82,8 @@ writeC __ __ *r writeC  ; Começa a escrever
 writeC _+ +_ rr writeC  
 writeC _- -_ rr writeC  
 writeC _1 1_ rr writeC  
-writeC _P __ lr init    ; Retoma inicio da fita para começar proxima função
+writeC _P __ lr initT    ; Retoma inicio da fita para começar proxima função
 
-init *_ *_ ll init
-init __ __ rr signal    
 ;-------------------------------
 
 
@@ -94,10 +92,12 @@ init __ __ rr signal
 
 ; #### dif_time.tm
 
-;captura sinal no horario da cidade de origem
+initT *_ *_ ll initT
+initT __ __ rr reverse    
 
-signal +_ -- r* num
-signal -_ ++ r* num
+; Armazena sinal reverso
+reverse +_ -- r* num
+reverse -_ ++ r* num
 
 
 ; Percorre até o final do NUMERO
@@ -128,7 +128,7 @@ sub +1 -1 r* add
 
 add _1 1_ rr add
 
-sub 1_ 1_ r* endT
+sub 1_ 1_ ** endT
 
 ; #### FIM dif_time.tm
 ;-------------------------------
@@ -136,7 +136,25 @@ sub 1_ 1_ r* endT
 ; TRANSIÇÃO
 ; Remove espaços em branco, e substitui o D pelo sinal (define a direção do voo + ou-)
 
+; Armazena resultado para reescrever
+endT 1_ _1 ll endT
+endT +_ _+ ll endT
+endT -_ _- ll endT
+endT __ __ *r posT  
 
+; Posiciona cabeçote
+posT _* _* rr posT
+posT __ __ r* posT
+posT P_ P_ ll writeT
+
+writeT _1 1_ ll writeT
+writeT _+ +_ ll writeT
+writeT _- -_ ll writeT
+writeT __ __ rr signal
+
+; Armazena sinal = direção do voo
+signal +_ ++ rr initP
+signal -_ -- rr initP
 
 
 ; Converte numeros decimais para unarios (horas)
