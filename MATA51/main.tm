@@ -1,16 +1,10 @@
-; Recebe 2 coordenadas no formato e retorna os fusos horários
-
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C75L_C15O
-; Saída: +11111  |  -1
-
-
-; Entrada: 75L  |  15O
-
+; Entrada: C15L_C15O_P1_D2
+; Saída: +11_P1_D2
 
 
 ; the finite set of states
-#Q = {cont, unit, dec, cent, next, endC, writeC,TimeZone, signal, num, borrow, sub, add, end}
+#Q = {cont, unit, dec, cent, next, endC, writeC, init, TimeZone, signal, num, borrow, sub, add, end, initF1}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
@@ -78,18 +72,20 @@ unit O_ _- lr unit
 ; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
 next 0* _* r* next
 next _* _* r* next
-next P_ P_ ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
+next P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
 ; volta pro inicio da fita para escrever resultado
 endC _* _* ll endC
 endC __ __ ** writeC    
 
-writeC __ __ rr writeC ; Começa a escrever
+writeC __ __ *r writeC  ; Começa a escrever
 writeC _+ +_ rr writeC  
 writeC _- -_ rr writeC  
 writeC _1 1_ rr writeC  
-writeC P_ P_ rr TimeZone ; proxima função
+writeC _P __ lr init    ; Retoma inicio da fita para começar proxima função
 
+init *_ *_ ll init
+init __ __ rr signal    
 ;-------------------------------
 
 
@@ -97,10 +93,6 @@ writeC P_ P_ rr TimeZone ; proxima função
 ; Calcula a diferença de fuso horário
 
 ; #### dif_time.tm
-
-TimeZone __ __ ll initF1
-initF1 ** ** l* initF1
-initF1 __ __ r* signal     
 
 ;captura sinal no horario da cidade de origem
 
