@@ -1,5 +1,5 @@
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C15L_C15O_P1_D2#
+; Entrada: C15L_C15O_P1_D2_#
 ; Saída: 11-11111
 
 
@@ -193,6 +193,7 @@ writeH _H __ r* initH
 endH #_ __ ll writeD
 
 writeD _* _* ll writeD
+writeD 11 11 *l writeD
 writeD 1H 1H rl writeD
 writeD _- -_ rl writeS
 writeD _+ +_ rl writeS
