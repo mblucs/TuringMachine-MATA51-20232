@@ -1,10 +1,10 @@
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
 ; Entrada: C15L_C15O_P1_D2#
-; Saída: +11_P1_D2
+; Saída: 11-11111
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -185,26 +185,30 @@ endH D_ D_ ll writeH    ; identifica prox entrada
 
 ;-------------------------------
 
-; Converte duração do voo de decimal para unario
+; Escreve resultado
 
 writeH _1 1_ ll writeH
 writeH _H __ r* initH
 
-endH #_ ## ** endH
+endH #_ __ ll writeD
+
+writeD _* _* ll writeD
+writeD 1H 1H rl writeD
+writeD _- -_ rl writeS
+writeD _+ +_ rl writeS
+
+writeS _1 1_ rl writeS
+writeS __ __ *r writeS
 
 ;-------------------------------
-; #### hora de partida (P)
 
-; #### Converter pra unario
+; A partir daqui, devo sempre somar a  duração do voo com o fuso horario, mantendo o sinal??
+writeS _H __ *r addD
+addD _1 1_ rr addD
+addD __ #_ ** end
 
+; soma final
 
-; #### FIM 
 ;-------------------------------
 
-
-;-------------------------------
-; #### duração do voo
-
-; #### FIM 
-;-------------------------------
-
+;math.tm
