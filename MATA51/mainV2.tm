@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {initC, unitC, decC, centC, next, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
@@ -13,7 +13,7 @@
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 
 ; the start state
-#q0 = next
+#q0 = init
 
 ; the blank symbol
 #B = _
@@ -26,7 +26,7 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
-next C_ __ r* initC  ; Inicia função das coordenadas 
+init C_ __ r* initC  ; Inicia função das coordenadas 
 
 ;-------------------------------
 ; #### coord.tm
@@ -40,7 +40,7 @@ unitC 0_ 0_ l* decC
 
 unitC 01 51 *r unitC
 
-decC 11 _1 rr next ; fim
+decC 11 _1 rr init ; fim
 
 decC 3_ 11 r* unitC   ;30
 decC 6_ 41 r* unitC   ;60
@@ -57,7 +57,7 @@ decC 61 51 rr unitC   ;165
 
 ; centena
 centC 11 _1 rr initC
-decC __ __ ** next
+decC __ __ ** init
 
 ; Leste(+) ou Oeste(-)?
 unitC L_ _+ lr unitC
@@ -70,9 +70,9 @@ unitC O_ _- lr unitC
 ; #### Transição
 
 ; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
-next 0* _* r* next
-next _* _* r* next
-next P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
+init 0* _* r* init
+init _* _* r* init
+init P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
 ; volta pro inicio da fita para escrever resultado
 endC _* _* ll endC
@@ -169,6 +169,7 @@ decH 0_ 9_ ** unitH
 decH 1_ _1 rr decH
 decH 2_ 11 rr decH
 decH __ ** ** endH
+
 ;-------------------------------
 
 
