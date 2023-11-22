@@ -4,13 +4,13 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, writeH, initD, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, end}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 
 ; the start state
 #q0 = init
@@ -140,18 +140,25 @@ sub 1_ 1_ ** endT
 endT 1_ _1 lr endT
 endT +_ _+ lr endT
 endT -_ _- lr endT
-endT __ __ r* initP  
+endT __ __ r* initH 
 
-initP __ __ r*  initP
-initP P_ _P r* initP
-
-initP *P *P r* initP ; vai ate o final do numero
-initP _P _P lr unitH
 
 ;-------------------------------
 
 ; Converte numeros decimais para unarios (horas)
+
 ; decimal.tm
+
+initH __ __ r* initH
+
+initH 1_ 1_ r* initH
+
+initH P_ _H r* initH
+initH D_ _H r* initH
+
+initH *H *H r* initH ; vai ate o final do numero
+initH _H _H lr unitH
+
 
 ;unidade
 unitH 0_ 0_ l* decH
@@ -176,18 +183,14 @@ endH __ __ r* endH
 endH 0_ __ r* endH
 endH D_ D_ ll writeH    ; identifica prox entrada
 
-writeH _1 1_ ll writeH
-writeH _P __ r* initD
-
-
 ;-------------------------------
 
 ; Converte duração do voo de decimal para unario
 
-initD 1_ 1_ r* initD
-initD D_ _D rr unitH
+writeH _1 1_ ll writeH
+writeH _H __ r* initH
 
-endH #_ #_ ll endH
+endH #_ ## ** endH
 
 ;-------------------------------
 ; #### hora de partida (P)
