@@ -152,6 +152,7 @@ initP P_ _P rr unitH
 ; decimal.tm
 
 ;unidade
+unitH 0_ 0_ l* decH
 unitH 1_ 01 lr decH
 unitH 2_ 11 *r unitH
 unitH 3_ 21 *r unitH
@@ -161,14 +162,13 @@ unitH 6_ 51 *r unitH
 unitH 7_ 61 *r unitH
 unitH 8_ 71 *r unitH
 unitH 9_ 81 *r unitH
-unitH 0_ 0_ l* decH
 
-decH __ ** ** endH
 
 ; subtrai 1 dezena
-decH 1_ _1 rr decH
 decH 0_ 9_ ** unitH
+decH 1_ _1 rr decH
 decH 2_ 11 rr decH
+decH __ ** ** endH
 ;-------------------------------
 
 
