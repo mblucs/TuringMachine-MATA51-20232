@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {initC, unitC, decC, centC, next, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, end}
+#Q = {initC, unitC, decC, centC, next, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, initH, unitH, decH, endH, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
@@ -140,12 +140,38 @@ sub 1_ 1_ ** endT
 endT 1_ _1 lr endT
 endT +_ _+ lr endT
 endT -_ _- lr endT
-endT __ __ rr initP  
+endT __ __ r* initP  
 
 initP __ __ r*  initP
-initP P_ _P rr init
+initP P_ _P rr unitH
+
+
+;-------------------------------
 
 ; Converte numeros decimais para unarios (horas)
+; decimal.tm
+
+;unidade
+unitH 1_ 01 lr decH
+unitH 2_ 11 *r unitH
+unitH 3_ 21 *r unitH
+unitH 4_ 31 *r unitH
+unitH 5_ 41 *r unitH
+unitH 6_ 51 *r unitH
+unitH 7_ 61 *r unitH
+unitH 8_ 71 *r unitH
+unitH 9_ 81 *r unitH
+unitH 0_ 0_ l* decH
+
+decH __ ** ** endH
+
+; subtrai 1 dezena
+decH 1_ _1 rr decH
+decH 0_ 9_ ** unitH
+decH 2_ 11 rr decH
+;-------------------------------
+
+
 
 
 ;-------------------------------
