@@ -143,8 +143,10 @@ endT -_ _- lr endT
 endT __ __ r* initP  
 
 initP __ __ r*  initP
-initP P_ _P rr unitH
+initP P_ _P r* initP
 
+initP *P *P r* initP ; vai ate o final do numero
+initP _P _P lr unitH
 
 ;-------------------------------
 
