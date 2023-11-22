@@ -12,10 +12,10 @@
 #Q = {cont, unit, dec, cent, next, endC, writeC,TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
 
 ; the start state
 #q0 = next
@@ -77,7 +77,7 @@ unit O_ _- lr unit
 ; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
 next 0* _* r* next
 next _* _* r* next
-next #_ #_ ll endC ; # representa o fim das coordenadas
+next P_ P_ ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
 ; volta pro inicio da fita para escrever resultado
 endC _* _* ll endC
@@ -87,7 +87,7 @@ writeC __ __ rr writeC ; Começa a escrever
 writeC _+ +_ rr writeC  
 writeC _- -_ rr writeC  
 writeC _1 1_ rr writeC  
-writeC #_ #_ rr TimeZone
+writeC P_ P_ rr TimeZone ; proxima função
 
 ;-------------------------------
 

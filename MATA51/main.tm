@@ -8,17 +8,18 @@
 ; Entrada: 75L  |  15O
 
 
+
 ; the finite set of states
-#Q = {Coord, cont, unit, dec, cent, endCoord, initF1, initF2, TimeZone, signal, num, borrow, sub, add, end}
+#Q = {cont, unit, dec, cent, next, endC, writeC,TimeZone, signal, num, borrow, sub, add, end}
 
 ; the finite set of input symbols
-#S = {_,C,P,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
 
 ; the complete set of tape symbols
-#G = {_,C,P,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P}
 
 ; the start state
-#q0 = Coord
+#q0 = next
 
 ; the blank symbol
 #B = _
@@ -31,7 +32,7 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
-Coord C_ __ r* cont
+next C_ __ r* cont  ; Inicia função das coordenadas 
 
 ;-------------------------------
 ; #### coord.tm
@@ -45,7 +46,7 @@ unit 0_ 0_ l* dec
 
 unit 01 51 *r unit
 
-dec 11 _1 rr Coord ; fim
+dec 11 _1 rr next ; fim
 
 dec 3_ 11 r* unit   ;30
 dec 6_ 41 r* unit   ;60
@@ -62,15 +63,11 @@ dec 61 51 rr unit   ;165
 
 ; centena
 cent 11 _1 rr cont
-dec __ __ ** Coord
+dec __ __ ** next
 
 ; Leste(+) ou Oeste(-)?
 unit L_ _+ lr unit
 unit O_ _- lr unit
-
-Coord 0* _* r* Coord
-Coord _* _* r* Coord
-Coord #_ C_ rl initF2
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -78,24 +75,27 @@ Coord #_ C_ rl initF2
 ;-------------------------------
 ; #### Transição
 
-; volta pro inicio da fita
-initF2 ** ** *l initF2
-initF2 __ __ l* initF2      ; terminou de escrever na fita, procura qual a função a executar
-initF2 C_ __ *r endCoord   ; escreve resultado das coordenadas
+; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
+next 0* _* r* next
+next _* _* r* next
+next P_ P_ ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
+; volta pro inicio da fita para escrever resultado
+endC _* _* ll endC
+endC __ __ ** writeC    
 
-; copia resultado da fita 2 na 1 fita - resultado das coordenadas
-
-endCoord _+ +_ rr endCoord  
-endCoord _- -_ rr endCoord  
-endCoord _1 1_ rr endCoord  
-endCoord __ __ ** TimeZone
-
-;-------------------------------
-
-
+writeC __ __ rr writeC ; Começa a escrever
+writeC _+ +_ rr writeC  
+writeC _- -_ rr writeC  
+writeC _1 1_ rr writeC  
+writeC P_ P_ rr TimeZone ; proxima função
 
 ;-------------------------------
+
+
+;-------------------------------
+; Calcula a diferença de fuso horário
+
 ; #### dif_time.tm
 
 TimeZone __ __ ll initF1
