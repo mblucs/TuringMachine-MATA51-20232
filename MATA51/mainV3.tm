@@ -4,13 +4,13 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, unitD, unitD2, decD, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, initF, unitF, decF, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 
 ; the start state
 #q0 = init
@@ -223,38 +223,25 @@ addR -_ __ lr subR
 subR 11 __ lr subR
 subR _1 -1 r* addR ; numero negativo
 
-addR __ __ l* unitD
-subR *_ *_ ** unitD
+addR __ _# ** initF
+subR *_ *# ** initF
 
 
 ;-------------------------------
 
+; escreve 24 para comparar com resultado final
+
+
+
+; Apresenta resultado final
+;-------------------------------
 ; convert to decimal
 
-;unidade
-unitD 1_ _1 l* unitD
-unitD 10 _1 l* unitD
-unitD 11 _2 l* unitD
-unitD 12 _3 l* unitD
-unitD 13 _4 l* unitD
-unitD 14 _5 l* unitD
-unitD 15 _6 l* unitD
-unitD 16 _7 l* unitD
-unitD 17 _8 l* unitD
-unitD 18 _9 l* unitD
-unitD 19 _0 *l decD
+initF _# #2 r* initF
+initF _2 24 r* initF
+initF _4 4F r* initF
 
-decD __ _1 lr unitD
-decD _1 _2 lr unitD2
+initF _F F_ l* unitH ; converte horas para unario
 
-unitD _* _* ** end
-unitD __ 0_ ** end
-
-; trata limite superior (>23)
-unitD2 1_ _1 l* unitD2
-unitD2 10 _1 l* unitD2
-unitD2 11 _2 l* unitD2
-unitD2 12 _3 l* unitD2
-unitD2 13 _0 *l decD
-
-decD _2 __ lr unitD
+; endH F_ F_ ll writeH    ; identifica prox entrada
+ 
