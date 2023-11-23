@@ -147,7 +147,7 @@ endT __ __ r* initH
 
 ; Converte numeros decimais para unarios (horas)
 
-; decimal.tm
+; toUnary.tm
 
 initH __ __ r* initH
 
