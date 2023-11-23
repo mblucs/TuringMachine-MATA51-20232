@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, unitD, unitD2, decD, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -223,10 +223,37 @@ addR -_ __ lr subR
 subR 11 __ lr subR
 subR _1 -1 r* addR ; numero negativo
 
-addR __ __ ** end
-subR __ __ ** end
+addR __ __ l* unitD
+subR *_ *_ ** unitD
 
 
 ;-------------------------------
 
 ; convert to decimal
+
+;unidade
+unitD 1_ _1 l* unitD
+unitD 10 _1 l* unitD
+unitD 11 _2 l* unitD
+unitD 12 _3 l* unitD
+unitD 13 _4 l* unitD
+unitD 14 _5 l* unitD
+unitD 15 _6 l* unitD
+unitD 16 _7 l* unitD
+unitD 17 _8 l* unitD
+unitD 18 _9 l* unitD
+unitD 19 _0 *l decD
+
+decD __ _1 lr unitD
+decD _1 _2 lr unitD2
+
+unitD _* _* ** end
+
+; trata limite superior (>23)
+unitD2 1_ _1 l* unitD2
+unitD2 10 _1 l* unitD2
+unitD2 11 _2 l* unitD2
+unitD2 12 _3 l* unitD2
+unitD2 13 _0 *l decD
+
+decD _2 __ lr unitD
