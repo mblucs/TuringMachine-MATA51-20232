@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -203,13 +203,30 @@ writeS __ __ *r writeS
 
 ;-------------------------------
 
-; A partir daqui, devo sempre somar a  duração do voo com o fuso horario, mantendo o sinal??
+; soma a duração do voo e a diferença de fuso horario.
 writeS _H __ *r addD
 addD _1 1_ rr addD
-addD __ #_ ** end
+addD __ __ l* addR
 
 ; soma final
 
 ;-------------------------------
 
 ;math.tm
+
+addR 1_ _1 ll addR
+
+addR +_ __ *r addR
+addR _1 1_ rr addR
+
+addR -_ __ lr subR
+subR 11 __ lr subR
+subR _1 -1 r* addR ; numero negativo
+
+addR __ __ ** end
+subR __ __ ** end
+
+
+;-------------------------------
+
+; convert to decimal
