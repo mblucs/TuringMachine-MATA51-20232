@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeS, addD, addR, subR, initF, unitF, decF, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -185,7 +185,7 @@ endH D_ D_ ll writeH    ; identifica prox entrada
 
 ;-------------------------------
 
-; Escreve resultado
+; Escreve resultado da operação
 
 writeH _1 1_ ll writeH
 writeH _H __ r* initH
@@ -195,16 +195,16 @@ endH #_ __ ll writeD
 writeD _* _* ll writeD
 writeD 11 11 *l writeD
 writeD 1H 1H rl writeD
-writeD _- -_ rl writeS
-writeD _+ +_ rl writeS
+writeD _- -_ rl writeO
+writeD _+ +_ rl writeO
 
-writeS _1 1_ rl writeS
-writeS __ __ *r writeS
+writeO _1 1_ rl writeO
+writeO __ __ *r writeO
 
 ;-------------------------------
 
 ; soma a duração do voo e a diferença de fuso horario.
-writeS _H __ *r addD
+writeO _H __ *r addD
 addD _1 1_ rr addD
 addD __ __ l* addR
 
@@ -224,24 +224,43 @@ subR 11 __ lr subR
 subR _1 -1 r* addR ; numero negativo
 
 addR __ _# ** initF
-subR *_ *# ** initF
+subR *_ *# r* initF
 
 
 ;-------------------------------
-
-; escreve 24 para comparar com resultado final
-
-
 
 ; Apresenta resultado final
 ;-------------------------------
-; convert to decimal
+
+; escreve 24 para comparar com resultado final
 
 initF _# #2 r* initF
 initF _2 24 r* initF
 initF _4 4F r* initF
 
-initF _F F_ l* unitH ; converte horas para unario
+initF _F F_ l* unitH ; converte 24 horas para unario
 
-; endH F_ F_ ll writeH    ; identifica prox entrada
- 
+endH F_ __ l* endF    ; alinha cabeçote no final
+endF __ __ l* endF
+endF #_ #_ ll day
+
+; day verifica se o resultado está dentro das 24h do dia
+
+day 11 10 ll day
+day _1 _1 ** end      ; (< 24), fim. apresenta resultado na fita 1
+
+day 1_ 1_ rr day    ; (> 24), subtrai os 24 do resultado final na fita 1
+day 10 __ rr day
+day #_ #_ ** end
+
+; negativo; apaga fita 1 e escreve oq sobrou da fita 2
+day -1 _- r* day    ; identifica sinal negativo
+
+day 1- _- r* day    ; apaga numero da fita 1
+day #- 1_ rl nday    ; escreve resultado da fita 2 na fita 1
+
+nday _1 1_ rl nday
+nday __ __ ** end
+
+;-------------------------------
+; convert to decimal
