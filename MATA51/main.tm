@@ -1,15 +1,17 @@
-; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
+; ./emulator/turing ./MATA51/main.tm C90L_C150O_P2_D4_#   
 
 ; Entrada: C90L_C30L_P8_D1_#
 ; Saída: 3
 
+; Entrada: C90L_C30L_P3_D1_#
+; Saída: 22
 
-; Entrada: C90L_C150L_P3_D1_# 
-; Saída: 
+; Entrada: C75O_C15L_P15_D8_# 
+; Saída: 5
 
 
-; Entrada: C90L_C150O_P20_D4_#
-; Saída: 
+; Entrada: C90L_C150O_P2_D4_#
+; Saída: 6
 
 
 ;-------------------------------
