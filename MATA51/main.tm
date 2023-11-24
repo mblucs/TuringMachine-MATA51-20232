@@ -128,7 +128,7 @@ sub +1 -1 r* add
 
 add _1 1_ rr add
 
-sub 1_ 1_ ** endT
+sub 1_ 1_ ** end
 
 ; #### FIM dif_time.tm
 ;-------------------------------
