@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, initD, unitD, unitD2, decD, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -248,11 +248,11 @@ endF #_ __ ll day
 ; 'day' verifica se o resultado está dentro das 24h do dia
 
 day 11 10 ll day
-day _1 _1 ** end      ; (< 24), fim. apresenta resultado na fita 1
+day _1 _1 rr initD      ; (< 24), fim. apresenta resultado na fita 1
 
 day 1_ 1_ rr day    ; (> 24), subtrai os 24 do resultado final na fita 1
-day 10 __ rr day
-day #_ #_ ** end
+day 10 _0 rr day
+day __ __ ll initD
 
 ; negativo; apaga fita 1 e escreve oq sobrou da fita 2
 day -1 _- r* day    ; identifica sinal negativo
@@ -261,7 +261,41 @@ day 1- _- r* day    ; apaga numero da fita 1
 day _- 1_ rl nday    ; escreve resultado da fita 2 na fita 1
 
 nday _1 1_ rl nday
-nday __ __ ** end
+nday __ __ l* initD
 
 ;-------------------------------
 ; convert to decimal
+
+initD 10 1_ rr initD
+initD __ __ l* unitD
+
+initD _0 __ ll initD
+initD 1_ 1_ ** unitD
+
+;unidade
+unitD 1_ _1 l* unitD
+unitD 10 _1 l* unitD
+unitD 11 _2 l* unitD
+unitD 12 _3 l* unitD
+unitD 13 _4 l* unitD
+unitD 14 _5 l* unitD
+unitD 15 _6 l* unitD
+unitD 16 _7 l* unitD
+unitD 17 _8 l* unitD
+unitD 18 _9 l* unitD
+unitD 19 _0 *l decD
+
+decD __ _1 lr unitD
+decD _1 _2 lr unitD2
+
+unitD _* _* ** end
+unitD __ 0_ ** end
+
+; trata limite superior (>23)
+unitD2 1_ _1 l* unitD2
+unitD2 10 _1 l* unitD2
+unitD2 11 _2 l* unitD2
+unitD2 12 _3 l* unitD2
+unitD2 13 _0 *l decD
+
+decD _2 __ lr unitD
