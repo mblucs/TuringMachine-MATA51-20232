@@ -159,6 +159,7 @@ initH D_ _H r* initH
 
 initH *H *H r* initH ; vai ate o final do numero
 initH _H _H lr unitH
+initH #H #H lr unitH
 
 
 ;unidade

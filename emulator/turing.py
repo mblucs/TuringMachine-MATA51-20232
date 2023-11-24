@@ -418,15 +418,41 @@ class TuringMachine:
         return True
 
     def shutdown(self):
+        # BUG fix: o resultado é apresentado invertido quando a fita vai para esquerda a partir da posição 0
+        # Ao escrever na fita 1 em uma posição negativa, na vdd escreve na posição negativa mais proxima do zero, gerando o BUG
+        # Exemplo: executando <./emulator/turing ./MATA51/main.tm C30L_C15O_P18_D2# -v>
+    
+        index, tp, head = self.tapes[0].view()
+
+        indexL = index.split()
+        tpL = tp.split()
+
+        # print(indexL)
+        # print(tpL)
+        
+        prev = int(indexL[0])
+        ans = ""
+
+        for i in range(len(indexL)):
+            curr = int(indexL[i])
+
+            if(tpL[i]!="_"):
+                if (prev > curr):  # fita em posição negativa, forma resultado ao contrario
+                    ans = tpL[i] + ans
+                else:
+                    ans += tpL[i]
+
+            prev = curr
+
         if env.args.verbose:
             if self.status != TMStatus.Error:
-                print(f"Result: {str(self.tapes[0])}")
+                print(f"Result: {ans}")
 
             print("==================== END ====================",
                   file=sys.stderr if self.status == TMStatus.Error else None)
         else:
             if self.status != TMStatus.Error:
-                print(str(self.tapes[0]))
+                print(f"Result: {ans}")
         self.status = TMStatus.Created
 
 
