@@ -212,10 +212,6 @@ addD __ __ l* addR
 
 ; soma final
 
-;-------------------------------
-
-;math.tm
-
 addR 1_ _1 ll addR
 
 addR +_ __ *r addR
@@ -292,6 +288,7 @@ decD _1 _2 lr unitD
 unitD _* _* ** endD
 unitD __ 0_ ** endD
 
+;-------------------------------
 
 ; Escreve resultado final na fita 1
 endD _0 0_ ll endD 
