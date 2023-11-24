@@ -194,6 +194,7 @@ endH #_ __ ll writeD
 
 writeD _* _* ll writeD
 writeD 11 11 *l writeD
+writeD _H _H l* writeD
 writeD 1H 1H rl writeD
 writeD _- -_ rl writeO
 writeD _+ +_ rl writeO
@@ -257,7 +258,7 @@ day #_ #_ ** end
 day -1 _- r* day    ; identifica sinal negativo
 
 day 1- _- r* day    ; apaga numero da fita 1
-day #- 1_ rl nday    ; escreve resultado da fita 2 na fita 1
+day _- 1_ rl nday    ; escreve resultado da fita 2 na fita 1
 
 nday _1 1_ rl nday
 nday __ __ ** end
