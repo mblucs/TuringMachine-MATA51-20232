@@ -1,30 +1,29 @@
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C15L_C15O_P1_D2_#
-; Saída: 11-11111
+
+; Entrada: C90L_C30L_P8_D1_#
+; Saída: 3
 
 
-; the finite set of states
+; Entrada: C90L_C150L_P3_D1_# 
+; Saída: 
+
+
+; Entrada: C90L_C150O_P20_D4_#
+; Saída: 
+
+
+;-------------------------------
+
 #Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, initD, unitD, unitD2, decD, endD, end}
-
-; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
-
-; the complete set of tape symbols
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
-
-; the start state
 #q0 = init
-
-; the blank symbol
 #B = _
-
-; the set of final states
 #F = {end}
-
-; the number of tapes
 #N = 2
 
-;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
+
+;-------------------------------
 
 init C_ __ r* initC  ; Inicia função das coordenadas 
 
@@ -128,7 +127,7 @@ sub +1 -1 r* add
 
 add _1 1_ rr add
 
-sub 1_ 1_ ** end
+sub 1_ 1_ ** endT
 
 ; #### FIM dif_time.tm
 ;-------------------------------
@@ -286,19 +285,11 @@ unitD 18 _9 l* unitD
 unitD 19 _0 *l decD
 
 decD __ _1 lr unitD
-decD _1 _2 lr unitD2
+decD _1 _2 lr unitD
 
 unitD _* _* ** endD
 unitD __ 0_ ** endD
 
-; trata limite superior (>23)
-unitD2 1_ _1 l* unitD2
-unitD2 10 _1 l* unitD2
-unitD2 11 _2 l* unitD2
-unitD2 12 _3 l* unitD2
-unitD2 13 _0 *l decD
-
-decD _2 __ lr unitD
 
 ; Escreve resultado final na fita 1
 endD _0 0_ ll endD 
