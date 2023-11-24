@@ -1,19 +1,19 @@
 ; ./emulator/turing ./MATA51/main.tm 75L_15O -v    
-; Entrada: C15L_C15O_P1_D2
-; Saída: +11_P1_D2
+; Entrada: C15L_C15O_P1_D2_#
+; Saída: 11-11111
 
 
 ; the finite set of states
-#Q = {cont, unit, dec, cent, next, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initP, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, end}
 
 ; the finite set of input symbols
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 
 ; the complete set of tape symbols
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 
 ; the start state
-#q0 = next
+#q0 = init
 
 ; the blank symbol
 #B = _
@@ -26,42 +26,42 @@
 
 ;<currStt0> <currSymbl> <newSymbl> <dir> <newStt>
 
-next C_ __ r* cont  ; Inicia função das coordenadas 
+init C_ __ r* initC  ; Inicia função das coordenadas 
 
 ;-------------------------------
 ; #### coord.tm
 
-cont ** ** r* cont
-cont __ __ l* unit
+initC ** ** r* initC
+initC __ __ l* unitC
 
 ; --- Após subtração, corrige ultimo digito (unidade)
-unit 5_ 01 l* dec    
-unit 0_ 0_ l* dec
+unitC 5_ 01 l* decC    
+unitC 0_ 0_ l* decC
 
-unit 01 51 *r unit
+unitC 01 51 *r unitC
 
-dec 11 _1 rr next ; fim
+decC 11 _1 rr init ; fim
 
-dec 3_ 11 r* unit   ;30
-dec 6_ 41 r* unit   ;60
-dec 9_ 71 r* unit   ;90
-dec 2_ 01 r* unit   ;120
-dec 5_ 31 r* unit   ;150
-dec 8_ 61 r* unit   ;180
+decC 3_ 11 r* unitC   ;30
+decC 6_ 41 r* unitC   ;60
+decC 9_ 71 r* unitC   ;90
+decC 2_ 01 r* unitC   ;120
+decC 5_ 31 r* unitC   ;150
+decC 8_ 61 r* unitC   ;180
 
-dec 41 31 rr unit   ;45
-dec 71 61 rr unit   ;75
-dec 01 91 l* cent   ;105
-dec 31 21 rr unit   ;135
-dec 61 51 rr unit   ;165
+decC 41 31 rr unitC   ;45
+decC 71 61 rr unitC   ;75
+decC 01 91 l* centC   ;105
+decC 31 21 rr unitC   ;135
+decC 61 51 rr unitC   ;165
 
 ; centena
-cent 11 _1 rr cont
-dec __ __ ** next
+centC 11 _1 rr initC
+decC __ __ ** init
 
 ; Leste(+) ou Oeste(-)?
-unit L_ _+ lr unit
-unit O_ _- lr unit
+unitC L_ _+ lr unitC
+unitC O_ _- lr unitC
 
 ; #### FIM coord.tm
 ;-------------------------------
@@ -70,9 +70,9 @@ unit O_ _- lr unit
 ; #### Transição
 
 ; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
-next 0* _* r* next
-next _* _* r* next
-next P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
+init 0* _* r* init
+init _* _* r* init
+init P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
 ; volta pro inicio da fita para escrever resultado
 endC _* _* ll endC
@@ -137,42 +137,130 @@ sub 1_ 1_ ** endT
 ; Remove espaços em branco, e substitui o D pelo sinal (define a direção do voo + ou-)
 
 ; Armazena resultado para reescrever
-endT 1_ _1 ll endT
-endT +_ _+ ll endT
-endT -_ _- ll endT
-endT __ __ *r posT  
+endT 1_ _1 lr endT
+endT +_ _+ lr endT
+endT -_ _- lr endT
+endT __ __ r* initH 
 
-; Posiciona cabeçote
-posT _* _* rr posT
-posT __ __ r* posT
-posT P_ P_ ll writeT
 
-writeT _1 1_ ll writeT
-writeT _+ +_ ll writeT
-writeT _- -_ ll writeT
-writeT __ __ rr signal
-
-; Armazena sinal = direção do voo
-signal +_ ++ rr initP
-signal -_ -- rr initP
-
+;-------------------------------
 
 ; Converte numeros decimais para unarios (horas)
 
+; toUnary.tm
+
+initH __ __ r* initH
+
+initH 1_ 1_ r* initH
+
+initH P_ _H r* initH
+initH D_ _H r* initH
+
+initH *H *H r* initH ; vai ate o final do numero
+initH _H _H lr unitH
+
+
+;unidade
+unitH 0_ 0_ l* decH
+unitH 1_ 01 lr decH
+unitH 2_ 11 *r unitH
+unitH 3_ 21 *r unitH
+unitH 4_ 31 *r unitH
+unitH 5_ 41 *r unitH
+unitH 6_ 51 *r unitH
+unitH 7_ 61 *r unitH
+unitH 8_ 71 *r unitH
+unitH 9_ 81 *r unitH
+
+
+; subtrai 1 dezena
+decH 0_ 9_ ** unitH
+decH 1_ _1 rr decH
+decH 2_ 11 rr decH
+decH __ ** ** endH
+
+endH __ __ r* endH
+endH 0_ __ r* endH
+endH D_ D_ ll writeH    ; identifica prox entrada
 
 ;-------------------------------
-; #### hora de partida (P)
 
-; #### Converter pra unario
+; Escreve resultado da operação
 
+writeH _1 1_ ll writeH
+writeH _H __ r* initH
 
-; #### FIM 
+endH #_ __ ll writeD
+
+writeD _* _* ll writeD
+writeD 11 11 *l writeD
+writeD 1H 1H rl writeD
+writeD _- -_ rl writeO
+writeD _+ +_ rl writeO
+
+writeO _1 1_ rl writeO
+writeO __ __ *r writeO
+
 ;-------------------------------
 
+; soma a duração do voo e a diferença de fuso horario.
+writeO _H __ *r addD
+addD _1 1_ rr addD
+addD __ __ l* addR
+
+; soma final
 
 ;-------------------------------
-; #### duração do voo
 
-; #### FIM 
+;math.tm
+
+addR 1_ _1 ll addR
+
+addR +_ __ *r addR
+addR _1 1_ rr addR
+
+addR -_ __ lr subR
+subR 11 __ lr subR
+subR _1 -1 r* addR ; numero negativo
+
+addR __ _# ** initF
+subR *_ *# r* initF
+
+
 ;-------------------------------
 
+; Apresenta resultado final
+;-------------------------------
+
+; escreve 24 para comparar com resultado final
+
+initF _# #2 r* initF
+initF _2 24 r* initF
+initF _4 4F r* initF
+
+initF _F F_ l* unitH ; converte 24 horas para unario
+
+endH F_ __ l* endF    ; alinha cabeçote no final
+endF __ __ l* endF
+endF #_ __ ll day
+
+; 'day' verifica se o resultado está dentro das 24h do dia
+
+day 11 10 ll day
+day _1 _1 ** end      ; (< 24), fim. apresenta resultado na fita 1
+
+day 1_ 1_ rr day    ; (> 24), subtrai os 24 do resultado final na fita 1
+day 10 __ rr day
+day #_ #_ ** end
+
+; negativo; apaga fita 1 e escreve oq sobrou da fita 2
+day -1 _- r* day    ; identifica sinal negativo
+
+day 1- _- r* day    ; apaga numero da fita 1
+day #- 1_ rl nday    ; escreve resultado da fita 2 na fita 1
+
+nday _1 1_ rl nday
+nday __ __ ** end
+
+;-------------------------------
+; convert to decimal
