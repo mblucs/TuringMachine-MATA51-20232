@@ -242,9 +242,9 @@ initF _F F_ l* unitH ; converte 24 horas para unario
 
 endH F_ __ l* endF    ; alinha cabeçote no final
 endF __ __ l* endF
-endF #_ #_ ll day
+endF #_ __ ll day
 
-; day verifica se o resultado está dentro das 24h do dia
+; 'day' verifica se o resultado está dentro das 24h do dia
 
 day 11 10 ll day
 day _1 _1 ** end      ; (< 24), fim. apresenta resultado na fita 1
