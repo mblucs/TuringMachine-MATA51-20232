@@ -4,7 +4,7 @@
 
 
 ; the finite set of states
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, initD, unitD, unitD2, decD, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, posT, writeT, signal, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, unitF, decF, endF, day, nday, initD, unitD, unitD2, decD, endD, end}
 
 ; the finite set of input symbols
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
@@ -288,8 +288,8 @@ unitD 19 _0 *l decD
 decD __ _1 lr unitD
 decD _1 _2 lr unitD2
 
-unitD _* _* ** end
-unitD __ 0_ ** end
+unitD _* _* ** endD
+unitD __ 0_ ** endD
 
 ; trata limite superior (>23)
 unitD2 1_ _1 l* unitD2
@@ -299,3 +299,17 @@ unitD2 12 _3 l* unitD2
 unitD2 13 _0 *l decD
 
 decD _2 __ lr unitD
+
+; Escreve resultado final na fita 1
+endD _0 0_ ll endD 
+endD _1 1_ ll endD
+endD _2 2_ ll endD
+endD _3 3_ ll endD
+endD _4 4_ ll endD
+endD _5 5_ ll endD
+endD _6 6_ ll endD
+endD _7 7_ ll endD
+endD _8 8_ ll endD
+endD _9 9_ ll endD
+
+endD __ __ rr end
