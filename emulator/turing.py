@@ -437,7 +437,7 @@ class TuringMachine:
             curr = int(indexL[i])
 
             if(tpL[i]!="_"):
-                if (prev > curr):  # fita em posição negativa, forma resultado ao contrario
+                if (curr and prev > curr):  # fita em posição negativa, forma resultado ao contrario
                     ans = tpL[i] + ans
                 else:
                     ans += tpL[i]
