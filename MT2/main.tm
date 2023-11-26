@@ -70,10 +70,10 @@ unitC O_ _- lr unitC
 ;-------------------------------
 ; #### Transição
 
-; Ignora espaços em branco e zeros; procura por # (fim Coordenadas)
+; Ignora espaços em branco e zeros; procura pelo fim das coordenadas
 init 0* _* r* init
 init _* _* r* init
-init P_ PP ll endC ; # representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
+init P_ PP ll endC ; P representa o fim das coordenadas e inicio da proxima entrada (horario de partida)
 
 ; volta pro inicio da fita para escrever resultado
 endC _* _* ll endC
