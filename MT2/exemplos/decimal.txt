@@ -1,0 +1,102 @@
+---------------------------------------------
+Step   : 367
+Index0 : 0 1 2 3 4 5 6
+Tape0  : 1 1 1 1 1 1 1
+Head0  :             ^
+Index1 : 19
+Tape1  : _ 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 368
+Index0 : 0 1 2 3 4 5
+Tape0  : 1 1 1 1 1 1
+Head0  :           ^
+Index1 : 19
+Tape1  : 1 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 369
+Index0 : 0 1 2 3 4
+Tape0  : 1 1 1 1 1
+Head0  :         ^
+Index1 : 19
+Tape1  : 2 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 370
+Index0 : 0 1 2 3
+Tape0  : 1 1 1 1
+Head0  :       ^
+Index1 : 19
+Tape1  : 3 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 371
+Index0 : 0 1 2
+Tape0  : 1 1 1
+Head0  :     ^
+Index1 : 19
+Tape1  : 4 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 372
+Index0 : 0 1
+Tape0  : 1 1
+Head0  :   ^
+Index1 : 19
+Tape1  : 5 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 373
+Index0 : 0
+Tape0  : 1
+Head0  : ^
+Index1 : 19
+Tape1  : 6 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 374
+Index0 : 1
+Tape0  : _
+Head0  : ^
+Index1 : 19
+Tape1  : 7 
+Head1  : ^ 
+State  : unitD
+---------------------------------------------
+Step   : 375
+Index0 : 1
+Tape0  : _
+Head0  : ^
+Index1 : 19
+Tape1  : 7 
+Head1  : ^ 
+State  : endD
+---------------------------------------------
+Step   : 376
+Index0 : 2
+Tape0  : 7
+Head0  : ^
+Index1 : 18
+Tape1  : _ 
+Head1  : ^ 
+State  : endD
+---------------------------------------------
+Step   : 377
+Index0 : 1
+Tape0  : 7
+Head0  : ^
+Index1 : 19
+Tape1  : _ 
+Head1  : ^ 
+State  : end
+---------------------------------------------
+Result: 7
+==================== END ====================
