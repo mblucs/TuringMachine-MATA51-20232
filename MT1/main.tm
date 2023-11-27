@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -217,7 +217,7 @@ decH # 0 r endH
 
 endH * * r endH
 endH D D l wrR
-endH # # * end
+endH # _ l endD
 
 next D D l initD    ; inicia conversão da duração
 
@@ -225,7 +225,19 @@ initD * * l initD
 initD _ D r readH
 
 ;-------------------------------
+; remove zeros e espaços em branco. Escreve # ao final do resultado parcial
 
-;
+endD _ _ l endD
+endD 0 _ l endD
+endD D # l readD 
+
+decH D # r endH
+
+; escreve a duração do voo a direita, logo depois da diferença de fuso. 
+; add concat
+
+readD * * l readD   ;procura D à esquerda para escreve-lo a direita
+readD D D l readR 
+
 
 ; > ./MT1/exemplos/main.txt
