@@ -1,18 +1,4 @@
-
-; ./emulator/turing ./MATA51/unitTest/1coord.tm 75L -v    
-
-; Recebe um comando no formato C[num][dir]
-    ; C:        representa o comando, "Coordenada"
-    ; [num]:    numero da coordenada, em decimal; multiplo de 15
-    ; [dir]:    direção da coordenada; "L" (Leste) ou "O" (Oeste)
-
-; Retorna a hora em relação a GMT0. Cada 15º representam 1h. Assim, 15ºL = GMT+5
-
-; Exemplo:
-    ; Entrada: C75L
-    ; Saída: +11111
-
-; Resultado apresentado na fita 2
+; ./emulator/turing ./MT1/main.tm C30O_C60L_P2_D5_# -v
 
 ;-------------------------------
 
@@ -26,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, initE, wrEP, wrEN, readR1, wrR1, readM, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -248,8 +234,30 @@ wrD1 _ 1 l readD
 
 ; fim
 readD1 _ _ r clear
-clear D _ r initE   ; arruma equação final
- 
+clear D # r initE   ; arruma equação final
 
+initE 1 1 r initE
+initE # # r initE
+initE + # l wrEP
+initE - # l wrEP
+
+wrEP 1 1 l wrEP
+wrEP # + r initE
+
+wrEN 1 1 l wrEN
+wrEN # - r initE
+
+initE _ _ l readR1
+
+; subtrai 1 do final e adiciona no lugar de #
+
+readR1 1 _ l wrR1
+wrR1 1 1 l wrR1
+wrR1 # 1 l readM    
+
+; operação matematica, le o proximo sinal
+
+
+; readR1, wrR1, readM
 
 ; > ./MT1/exemplos/main.txt
