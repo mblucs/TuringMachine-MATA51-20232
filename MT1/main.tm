@@ -26,9 +26,9 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, endT, initP, end}
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, end}
+#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
 #F = {end}
 #N = 1
@@ -176,12 +176,56 @@ subT1 - + l addT1
 subT1 + - l addT1
 
 addT1 0 1 l wrR    ; fim da subtração.  oq restou é o resultado 
-; escreve # a esq (wrR)
-;endT 0 0 l readR
+; wrR irá escrever os 1 à esquerda da fita, ignorando os zeros no meio
 
-endT * * r endT
-endT # # r initP
-next # # r initP
+next # # l initH    ; fim da função das coordenadas, escreve # no inicio da fita para separar o proximo resultado
 
+initH * * l initH
+initH _ + r readH
+
+
+;-------------------------------
+
+; Converte numeros decimais para unarios (horas)
+
+readH * * r readH
+readH _ _ l unitH
+
+; subtrai unidade
+unitH 1 0 l wrH1
+unitH 2 1 l wrH1
+unitH 3 2 l wrH1
+unitH 4 3 l wrH1
+unitH 5 4 l wrH1
+unitH 6 5 l wrH1
+unitH 7 6 l wrH1
+unitH 8 7 l wrH1
+unitH 9 8 l wrH1
+
+unitH 0 0 l decH
+
+decH 1 0 r addH1
+decH 2 1 r addH1
+addH1 0 9 l wrH1
+
+wrH1 * * l wrH1
+wrH1 _ 1 r readH
+
+; escreve zeros para trazer o resultado parcial mais pra direita, junto com o restante da entrada
+decH 0 0 r endH 
+decH # 0 r endH
+
+endH * * r endH
+endH D D l wrR
+endH # # * end
+
+next D D l initD    ; inicia conversão da duração
+
+initD * * l initD
+initD _ D r readH
+
+;-------------------------------
+
+;
 
 ; > ./MT1/exemplos/main.txt
