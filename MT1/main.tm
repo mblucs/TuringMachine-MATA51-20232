@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, endT, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, endT, initP, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #B = _
@@ -129,6 +129,7 @@ wr1 # 1 l wrR
 readR _ _ r clear
 clear 0 _ r clear
 clear # _ r next      
+clear 1 1 r next      
 
 ;usando next ao inves de initT
 
@@ -174,10 +175,13 @@ subT1 0 0 r subT1
 subT1 - + l addT1
 subT1 + - l addT1
 
-addT1 0 1 l endT
-endT 0 # l readR
+addT1 0 1 l wrR    ; fim da subtração.  oq restou é o resultado 
+; escreve # a esq (wrR)
+;endT 0 0 l readR
 
-next # # l end
+endT * * r endT
+endT # # r initP
+next # # r initP
 
 
 ; > ./MT1/exemplos/main.txt
