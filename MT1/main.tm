@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #B = _
@@ -41,6 +41,7 @@
 
 
 initC * * r initC
+initC C # r initC ; # irá separar o resultado da entrada
 initC _ _ l readC
 
 readC L _ l wrCL
@@ -48,11 +49,9 @@ readC O _ l wrCO
 
 ;sinal
 wrCL * * l wrCL
-wrCL C C l wrCL
 wrCL _ + r initC
 
 wrCO * * l wrCO
-wrCO C C l wrCO
 wrCO _ - r initC
 
 
@@ -98,3 +97,75 @@ endC C 0 r initC         ; segunda longitude
 ; 1111111111+1-C0000000000P1D1#
 ; Destino, Origem, C0, P1,D1
 ;-------------------------------
+
+
+;escreve o resultado imediatamente antes da entrada, removendo os zeros desnecessarios
+
+endC P P l wrR
+
+; Atualiza posição do resultado
+wrR _ # l readR   
+wrR 0 # l readR    
+
+;Procura proxima entrada diferente de 0 ou # para escrever
+readR 0 0 l readR   
+readR # 0 l readR   
+
+readR - 0 r wrN 
+readR + 0 r wrP
+readR 1 0 r wr1
+
+; Escreve resultado no lugar do #, move para esq e escreve #, pro prox result
+wrN 0 0 r wrN
+wrN # - l wrR
+
+wrP 0 0 r wrP
+wrP # + l wrR
+
+wr1 0 0 r wr1
+wr1 # 1 l wrR
+
+; Após escrever resultado, limpa lixo à esq
+readR _ _ r clear
+clear 0 _ r clear
+clear # _ r next       ; REVIEW: usar estado generico pra procurar prox func
+
+;usando next ao inves de initT
+
+next * * r next
+next P # l initT
+
+;-------------------------------
+
+; Calcula a diferença entre os fusos, operação à esquerda do P
+; Destino - Origem
+
+initT * * l initT
+
+; Partida, inverte o sinal
+initT - + l readTN
+initT + - l readTP
+
+readTN 1 1 l readTN
+readTP 1 1 l readTP
+
+; Sinais iguas: adicao, substitui o sinal por 1 para concatenar valores. subtrai 1 do resultado
+readTN - 1 l readT1
+readTP + 1 l readT1
+
+readT1 1 1 l readT1
+readT1 _ _ r subT1
+subT1 1 0 l readT0 ;teste 
+
+; Sinais diferentes: subtracao.
+readTN + 0 l readT0
+readTP - 0 l readT0 
+
+; readT0, cabeçote posicionado no 0
+; se encontrar 1 à esq, remove 1 à dir
+; 110111
+
+readT0 0 0 l readT0
+readT0 1 0 l subT1
+
+; > ./MT1/exemplos/main.txt
