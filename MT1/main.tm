@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -227,17 +227,26 @@ initD _ D r readH
 ;-------------------------------
 ; remove zeros e espaços em branco. Escreve # ao final do resultado parcial
 
-endD _ _ l endD
-endD 0 _ l endD
-endD D # l readD 
-
 decH D # r endH
+
+; procura o resultado D armazenado a esquerda
+endD 0 _ l endD
+endD D D l readD1
+endD * * l endD 
 
 ; escreve a duração do voo a direita, logo depois da diferença de fuso. 
 ; add concat
 
 readD * * l readD   ;procura D à esquerda para escreve-lo a direita
-readD D D l readR 
+readD D D l readD1
+
+readD1 0 0 l readD1
+readD1 1 0 r wrD1
+
+wrD1 * * r wrD1
+wrD1 _ 1 l readD
+
+; 
 
 
 ; > ./MT1/exemplos/main.txt
