@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -227,7 +227,7 @@ initD _ D r readH
 ;-------------------------------
 ; remove zeros e espaços em branco. Escreve # ao final do resultado parcial
 
-decH D # r endH
+decH D _ r endH
 
 ; procura o resultado D armazenado a esquerda
 endD 0 _ l endD
@@ -246,7 +246,10 @@ readD1 1 0 r wrD1
 wrD1 * * r wrD1
 wrD1 _ 1 l readD
 
-; 
+; fim
+readD1 _ _ r clear
+clear D _ r initE   ; arruma equação final
+ 
 
 
 ; > ./MT1/exemplos/main.txt
