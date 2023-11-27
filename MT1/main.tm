@@ -26,7 +26,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, endT, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #B = _
@@ -128,7 +128,7 @@ wr1 # 1 l wrR
 ; Após escrever resultado, limpa lixo à esq
 readR _ _ r clear
 clear 0 _ r clear
-clear # _ r next       ; REVIEW: usar estado generico pra procurar prox func
+clear # _ r next      
 
 ;usando next ao inves de initT
 
@@ -161,11 +161,23 @@ subT1 1 0 l readT0 ;teste
 readTN + 0 l readT0
 readTP - 0 l readT0 
 
-; readT0, cabeçote posicionado no 0
-; se encontrar 1 à esq, remove 1 à dir
-; 110111
+; readT0, cabeçote posicionado no 0, ex 110111.
+; remove 1 a esq e 1 a dir, sucessivamente
 
 readT0 0 0 l readT0
-readT0 1 0 l subT1
+readT0 1 0 r subT1
+readT0 _ _ r clear  ;fim
+
+subT1 0 0 r subT1
+
+; resultado negativo, escreve oq sobrou removendo os zeros
+subT1 - + l addT1
+subT1 + - l addT1
+
+addT1 0 1 l endT
+endT 0 # l readR
+
+next # # l end
+
 
 ; > ./MT1/exemplos/main.txt
