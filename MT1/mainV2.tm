@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, endX,initX1, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -281,7 +281,7 @@ subM1 0 0 l subM1
 subM1 # 1 r endM    ; subtracao negativa. # representa a prox posicao de escrita
 
 ; negativo
-subM1 + - r addM1
+subM1 _ - r addM1
 subM1 - + r addM1
 addM1 0 1 r endM
 endM 0 # r readM0   ; marca posicao da prox escrita. fim da operacao de subtracao
@@ -291,8 +291,8 @@ endE 0 _ l endE
 endE 1 1 r endE
 
 ; fim. proximo modulo
-endE _ - r wrF2  
-endE # - r wrF2   
+endE _ F r wrF2  
+endE # F r wrF2   
 endE + 0 r wrF2    ; FIM. resultado zero
 
 
@@ -336,13 +336,13 @@ decF 0 1 r decF
 decF F 1 l initX     ; > endF
 
 initX 1 1 l initX
-initX - - l readX0
+initX F F l readX0
 
-readX0 - - l readX0
+readX0 F F l readX0
 readX0 1 0 r readX1
 readX0 0 0 l readX0
 
-readX1 - - r readX1
+readX1 F F r readX1
 readX1 1 0 l readX0
 readX1 0 0 r readX1
 
@@ -350,20 +350,29 @@ readX1 0 0 r readX1
 readX0 _ _ r wrX1
 
 wrX1 0 1 r wrX1
-wrX1 - _ r endX
+wrX1 F _ r endX     ; F q separa a comparação
 
 endX * _ r endX
 endX _ _ * end
 
+; = 24
+readX1 _ _ l initX1
+
 ; > 24
-
-readX1 _ _ l initX1; =24
-
 initX1 0 _ l initX1
-initX1 - _ l initX1
+initX1 F _ l initX1
 
 initX1 1 1 r end
 initX1 _ 0 * end
+
+; < 0
+
+readX0 - _ r wrX0   ;resultado negativo. escrever 1 a esq do prox 1
+wrX0 0 _ r wrX0
+wrX0 F _ r wrX0
+wrX0 1 1 l wrX0
+wrX0 _ 1 l end
+
 
 ; Converte de unario para decimal: resultado final
 
