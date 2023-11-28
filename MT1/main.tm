@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, initE, wrEP, wrEN, readR1, wrR1, readM, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, endE, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -136,20 +136,20 @@ initT + - l readTP
 readTN 1 1 l readTN
 readTP 1 1 l readTP
 
-; Sinais iguas: adicao, substitui o sinal por 1 para concatenar valores. subtrai 1 do resultado
-readTN - 1 l readT1
-readTP + 1 l readT1
+; Sinais diferentes: adicao, substitui o sinal por 1 para concatenar valores. subtrai 1 do resultado
+readTN + 1 l readT1
+readTP - 1 l readT1
 
 readT1 1 1 l readT1
 readT1 _ _ r subT1
-subT1 1 0 l readT0 ;teste 
+subT1 1 0 l readT0 
 
-; Sinais diferentes: subtracao.
-readTN + 0 l readT0
-readTP - 0 l readT0 
+; Sinais iguais: subtracao.
+readTN - 0 l readT0
+readTP + 0 l readT0 
 
 ; readT0, cabeçote posicionado no 0, ex 110111.
-; remove 1 a esq e 1 a dir, sucessivamente
+; ao encontrar 1 a esq, remove 1 a dir
 
 readT0 0 0 l readT0
 readT0 1 0 r subT1
@@ -242,7 +242,7 @@ clear D # r initE   ; arruma equação final, ordem de leitura da esquerda pra d
 initE 1 1 r initE
 initE # # r initE
 initE + # l wrEP
-initE - # l wrEP
+initE - # l wrEN
 
 wrEP 1 1 l wrEP
 wrEP # + r initE
@@ -260,9 +260,27 @@ wrR1 # 1 l readM
 
 ; Fita: + [horario_partida] [sinal] [diferenca_fuso] [duracao]
 
-; inicia operação matematica, le o proximo sinal
+; inicia operação matematica, procurando o sinal da operação
+readM 1 1 l readM
+readM + 1 l readM1  ; (+) substitui o + por 1 para concatenar valores e subtrai 1 ao inicio 
+readM - 0 r readM0  ; (-) subtrai 1 a dir, subtrai 1 a esq
 
 
+readM1 1 1 l readM1
+readM1 + + r subM1
+
+subM1 1 0 r readM0  
+subM1 0 0 l subM1
+
+readM0 0 0 r readM0
+readM0 1 0 l subM1
+readM0 _ _ l endE
+
+
+; limpa zeros a esq
+endE 0 _ l endE
+endE _ _ r end
 
 
 ; > ./MT1/exemplos/main.txt
+
