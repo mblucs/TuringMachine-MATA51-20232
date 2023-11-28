@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initV, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -278,6 +278,7 @@ subM1 # 1 r endM    ; subtracao negativa. # representa a prox posicao de escrita
 
 ; negativo
 subM1 + - r addM1
+subM1 - + r addM1
 addM1 0 1 r endM
 endM 0 # r readM0   ; marca posicao da prox escrita. fim da operacao de subtracao
 
@@ -328,10 +329,17 @@ readF F F l unitF
     ; Fita: [resultado] "-000" [1^24]     
 
 decF 0 1 r decF 
-decF F 1 l initV        
+decF F 1 r endF 
 
-; Calcula a diferença - verifica dia
+endF 1 1 r endF ;escreve F no final
+endF _ F l readM
 
-;initV
+readM0 F _ l endD
+
+;endD 0 _ l endD ; declarado
+
+endD # _ * end
+
+
 
 ; > ./MT1/exemplos/main.txt
