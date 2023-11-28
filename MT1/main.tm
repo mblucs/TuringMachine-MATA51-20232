@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initV, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initV, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -270,24 +270,41 @@ readM1 + + r subM1
 
 subM1 1 0 r readM0  
 subM1 0 0 l subM1
-subM1 + - r addM1
-addM1 0 1 r readM0
+
+
+; valor negativo, inverte sinal
+subM1 + _ r readMN  ; procura espaço pra escrever negativo -
+readMN 0 _ r readMN
+readMN 1 1 l wrMN
+readMN _ 0 r end
+wrMN _ - r addM1
+
+subM1 - _ r readMP  ; procura espaço pra escrever positivo +
+readMP 0 _ r readMP
+readMP 1 1 l wrMP
+readMP _ 0 r end
+wrMP _ + r addM1
+
+; apos inverter sinal, escreve 1 no final
+addM1 1 1 r addM1
+addM1 _ 1 r endM
 
 readM0 0 0 r readM0
 readM0 1 0 l subM1
 readM0 _ _ l endE
 
-subM1 - _ r endM
+;subM1 - _ r endM
+
 ;limpa zeros a direita
 endM 0 _ r endM
 endM 1 1 l endM
-endM _ + r endE
+;endM _ + r endE
 
 
 ; limpa zeros a esq
 endE 0 _ l endE
 endE 1 1 r endE
-endE _ - r wrF2   ; prox modulo
+endE _ - r end   ; prox modulo
 endE + 0 r end    ;FIM. resultado zero
 
 
