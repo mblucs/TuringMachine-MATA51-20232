@@ -210,18 +210,22 @@ next D D l initD    ; inicia conversão da duração
 initD * * l initD
 initD _ D r readH
 
+; Fita: [horario_partida] "+" [diferenca_fuso[sinal]] "D" [duracao_10] "_#"
+
+; Após readH converter o valor de D, tem:
+; Fita: [duracao] "D" [horario_partida] "+" [diferenca_fuso[sinal]]
+
 ;-------------------------------
-; remove zeros e espaços em branco. Escreve # ao final do resultado parcial
+
+; escreve a duração do voo a direita, logo depois da diferença de fuso. 
+; Concatenando ambos, soma-se seus resultados
 
 decH D _ r endH
 
-; procura o resultado D armazenado a esquerda
+; procura o resultado D a esquerda
 endD 0 _ l endD
 endD D D l readD1
 endD * * l endD 
-
-; escreve a duração do voo a direita, logo depois da diferença de fuso. 
-; add concat
 
 readD * * l readD   ;procura D à esquerda para escreve-lo a direita
 readD D D l readD1
@@ -232,9 +236,8 @@ readD1 1 0 r wrD1
 wrD1 * * r wrD1
 wrD1 _ 1 l readD
 
-; fim
 readD1 _ _ r clear
-clear D # r initE   ; arruma equação final
+clear D # r initE   ; arruma equação final, ordem de leitura da esquerda pra direita
 
 initE 1 1 r initE
 initE # # r initE
@@ -255,9 +258,11 @@ readR1 1 _ l wrR1
 wrR1 1 1 l wrR1
 wrR1 # 1 l readM    
 
+; Fita: + [horario_partida] [sinal] [diferenca_fuso] [duracao]
+
 ; inicia operação matematica, le o proximo sinal
 
 
-; readR1, wrR1, readM
+
 
 ; > ./MT1/exemplos/main.txt
