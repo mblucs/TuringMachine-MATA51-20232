@@ -262,50 +262,34 @@ wrR1 # 1 l readM
 
 ; inicia operação matematica, procurando o sinal da operação
 readM 1 1 l readM
-readM + 1 l readM1  ; (+) substitui o + por 1 para concatenar valores e subtrai 1 ao inicio 
-readM - 0 r readM0  ; (-) subtrai 1 a dir, subtrai 1 a esq
+readM + 1 r readM1  ; (+) substitui o + por 1 para concatenar valores e subtrai 1 ao final (dir)
+readM - 0 r readM0  ; (-) subtrai 1 a dir, entao subtrai 1 a esq
 
-readM1 1 1 l readM1
-readM1 + + r subM1
-
-subM1 1 0 r readM0  
-subM1 0 0 l subM1
-
-
-; valor negativo, inverte sinal
-subM1 + _ r readMN  ; procura espaço pra escrever negativo -
-readMN 0 _ r readMN
-readMN 1 1 l wrMN
-readMN _ 0 r end
-wrMN _ - r addM1
-
-subM1 - _ r readMP  ; procura espaço pra escrever positivo +
-readMP 0 _ r readMP
-readMP 1 1 l wrMP
-readMP _ 0 r end
-wrMP _ + r addM1
-
-; apos inverter sinal, escreve 1 no final
-addM1 1 1 r addM1
-addM1 _ 1 r endM
+readM1 1 1 r readM1
+readM1 + + l subM1
 
 readM0 0 0 r readM0
 readM0 1 0 l subM1
 readM0 _ _ l endE
 
-;subM1 - _ r endM
+subM1 1 0 r readM0  
+subM1 0 0 l subM1
+subM1 # 1 r endM    ; subtracao negativa. # representa a prox posicao de escrita
 
-;limpa zeros a direita
-endM 0 _ r endM
-endM 1 1 l endM
-;endM _ + r endE
-
+; negativo
+subM1 + - r addM1
+addM1 0 1 r endM
+endM 0 # r readM0   ; marca posicao da prox escrita. fim da operacao de subtracao
 
 ; limpa zeros a esq
 endE 0 _ l endE
 endE 1 1 r endE
-endE _ - r end   ; prox modulo
-endE + 0 r end    ;FIM. resultado zero
+
+; fim. proximo modulo
+endE _ - r wrF2  
+endE # - r wrF2   
+endE + 0 r end    ; FIM. resultado zero
+
 
 
 ; Módulo de comparação. ; Verifica se o resultado esta entre 0 e 24. subtraindo o resultado por 24
