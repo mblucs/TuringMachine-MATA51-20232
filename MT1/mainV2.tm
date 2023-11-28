@@ -12,9 +12,9 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, endX, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
+#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
 #F = {end}
 #N = 1
@@ -237,7 +237,11 @@ wrD1 * * r wrD1
 wrD1 _ 1 l readD
 
 readD1 _ _ r clear
-clear D # r initE   ; arruma equação final, ordem de leitura da esquerda pra direita
+clear D _ r readE   ; arruma equação final, ordem de leitura da esquerda pra direita
+
+;readE ignora o primeiro sinal (+) e escreve o sinal em seguida no seu lugar
+readE 1 1 r readE
+readE + # r initE
 
 initE 1 1 r initE
 initE # # r initE
@@ -289,7 +293,7 @@ endE 1 1 r endE
 ; fim. proximo modulo
 endE _ - r wrF2  
 endE # - r wrF2   
-endE + 0 r end    ; FIM. resultado zero
+endE + 0 r wrF2    ; FIM. resultado zero
 
 
 
@@ -329,16 +333,32 @@ readF F F l unitF
     ; Fita: [resultado] "-000" [1^24]     
 
 decF 0 1 r decF 
-decF F 1 r endF 
+decF F 1 l initX     ; > endF
 
-endF 1 1 r endF     ; escreve F no final
-endF _ F l end    ; ! readM
+initX 1 1 l initX
+initX - - l readX0
 
-readM0 F _ l endD
+readX0 - - l readX0
+readX0 1 0 r readX1
+readX0 0 0 l readX0
 
-;endD 0 _ l endD    ; declarado
+readX1 - - r readX1
+readX1 1 0 l readX0
+readX1 0 0 r readX1
 
-endD # _ * end
+; < 24
+readX0 _ _ r wrX1
+
+wrX1 0 1 r wrX1
+wrX1 - _ r endX
+
+endX * _ r endX
+endX _ _ * end
+
+; > 24
+
+
+
 
 
 
