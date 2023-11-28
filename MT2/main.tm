@@ -16,7 +16,7 @@
 
 ;-------------------------------
 
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, end}
+#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #q0 = init
@@ -250,7 +250,15 @@ day _1 _1 rr initD      ; (< 24), fim. apresenta resultado na fita 1
 
 day 1_ 1_ rr day    ; (> 24), subtrai os 24 do resultado final na fita 1
 day 10 _0 rr day
-day __ __ ll initD
+
+day __ __ *l endDay
+
+endDay _0 _0 ** initD
+endDay __ __ rr zero
+zero 10 __ rr zero
+zero 1_ 0_ rr zero
+zero __ __ rr end
+
 
 ; negativo; apaga fita 1 e escreve oq sobrou da fita 2
 day -1 _- r* day    ; identifica sinal negativo

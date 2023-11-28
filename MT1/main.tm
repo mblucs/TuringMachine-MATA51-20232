@@ -255,7 +255,7 @@ readR1 1 _ l wrR1
 wrR1 1 1 l wrR1
 wrR1 # 1 l readM    
 
-; operação matematica, le o proximo sinal
+; inicia operação matematica, le o proximo sinal
 
 
 ; readR1, wrR1, readM
