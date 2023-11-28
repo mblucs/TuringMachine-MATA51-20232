@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, endX, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, readMN, wrMN, readMP, wrMP, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, endX,initX1, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -270,7 +270,7 @@ readM + 1 r readM1  ; (+) substitui o + por 1 para concatenar valores e subtrai 
 readM - 0 r readM0  ; (-) subtrai 1 a dir, entao subtrai 1 a esq
 
 readM1 1 1 r readM1
-readM1 + + l subM1
+readM1 _ _ l subM1
 
 readM0 0 0 r readM0
 readM0 1 0 l subM1
@@ -301,7 +301,7 @@ endE + 0 r wrF2    ; FIM. resultado zero
     ; Fita: [resultado] "-24F" 
 
 wrF2 _ 2 r wrF4
-wrF4 _ 1 r wrF        ; Escreve 21 e substitui os 0 por 1 no final, totalizando 24
+wrF4 _ 0 r wrF        ; Escreve 20 e substitui os 0 por 1 no final, totalizando 23.
 wrF _ F l unitF 
 
 ; Converte numeros decimais para unarios (horas)
@@ -357,8 +357,15 @@ endX _ _ * end
 
 ; > 24
 
+readX1 _ _ l initX1; =24
 
+initX1 0 _ l initX1
+initX1 - _ l initX1
 
+initX1 1 1 r end
+initX1 _ 0 * end
+
+; Converte de unario para decimal: resultado final
 
 
 
