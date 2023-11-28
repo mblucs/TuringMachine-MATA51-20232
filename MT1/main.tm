@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, endE, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, decH, endH, initD, endD, readD, readD1, wrD1, initE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, initF, endF, unitF, wrF1, decF, addF1, readF, initV, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F}
 #B = _
@@ -265,22 +265,72 @@ readM 1 1 l readM
 readM + 1 l readM1  ; (+) substitui o + por 1 para concatenar valores e subtrai 1 ao inicio 
 readM - 0 r readM0  ; (-) subtrai 1 a dir, subtrai 1 a esq
 
-
 readM1 1 1 l readM1
 readM1 + + r subM1
 
 subM1 1 0 r readM0  
 subM1 0 0 l subM1
+subM1 + - r addM1
+addM1 0 1 r readM0
 
 readM0 0 0 r readM0
 readM0 1 0 l subM1
 readM0 _ _ l endE
 
+subM1 - _ r endM
+;limpa zeros a direita
+endM 0 _ r endM
+endM 1 1 l endM
+endM _ + r endE
+
 
 ; limpa zeros a esq
 endE 0 _ l endE
-endE _ _ r end
+endE 1 1 r endE
+endE _ - r wrF2   ; prox modulo
+endE + 0 r end    ;FIM. resultado zero
 
+
+; Módulo de comparação. ; Verifica se o resultado esta entre 0 e 24. subtraindo o resultado por 24
+    ; Fita: [resultado] "-24F" 
+
+wrF2 _ 2 r wrF4
+wrF4 _ 1 r wrF        ; Escreve 21 e substitui os 0 por 1 no final, totalizando 24
+wrF _ F l unitF 
+
+; Converte numeros decimais para unarios (horas)
+; Módulo com as mesmas transições da unitH, mas escreve à direita;
+
+; subtrai unidade
+unitF 1 0 r wrF1
+unitF 2 1 r wrF1
+unitF 3 2 r wrF1
+unitF 4 3 r wrF1
+unitF 5 4 r wrF1
+unitF 6 5 r wrF1
+unitF 7 6 r wrF1
+unitF 8 7 r wrF1
+unitF 9 8 r wrF1
+
+unitF 0 0 l decF
+
+decF 1 0 r addF1
+decF 2 1 r addF1
+addF1 0 9 r wrF1
+
+
+wrF1 * * r wrF1
+wrF1 _ 1 l readF
+readF 1 1 l readF
+readF F F l unitF
+
+    ; Fita: [resultado] "-000" [1^24]     
+
+decF 0 1 r decF 
+decF F 1 l initV        
+
+; Calcula a diferença - verifica dia
+
+;initV
 
 ; > ./MT1/exemplos/main.txt
-
