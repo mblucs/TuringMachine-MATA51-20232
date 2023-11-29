@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, initU, readU, wrU, wrU0, endU, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, readC0, wrC0, wrC01, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, initU, readU, wrU, wrU0, endU, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -44,6 +44,16 @@ wrCO _ - r initC
 readC 0 0 l readDecC       ; Unidade 0, verifica dezena
 readC 5 0 l subDecC        ; Subtrai 5 na unidade, subtrai 1 dezena
 
+; Coordenada zerada
+readDecC # # r readC0         
+readC0 0 _ l wrC0
+
+wrC0 * * l wrC0
+wrC0 _ + l wrC01
+wrC01 _ 0 r initC 
+
+readC # # r endC
+
 ; Subtrai 10, já subtraiu 5
 subDecC 1 0 l wrC1  ; 15
 subDecC 4 3 l wrC1  ; 45 -> 30  
@@ -73,7 +83,7 @@ wrC1 _ 1 r initC
 ; prox funcao
 endC _ 0 r endC
 endC 0 0 r endC
-endC C 0 r initC         ; segunda longitude
+endC C # r initC         ; segunda longitude
 
 ; #### FIM coord.tm
 
