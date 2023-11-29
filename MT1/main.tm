@@ -382,12 +382,13 @@ initU _ # r readU
 
 readU # # r readU
 readU 0 0 r readU
-readU 1 0 l wrU
+readU 1 # l wrU
 
 wrU # # l wrU
-wrU 0 0 l wrU
+;wrU 0 0 l wrU
 
 wrU _ 1 r readU
+wrU 0 1 r readU
 wrU 1 2 r readU
 wrU 2 3 r readU
 wrU 3 4 r readU
@@ -398,12 +399,14 @@ wrU 7 8 r readU
 wrU 8 9 r readU
 wrU 9 0 l wrU0  
 
-wrU0 _ 1 l readU ; escreve dezena
+; escreve dezena
+wrU0 _ 1 r readU 
+wrU0 1 2 r readU ; escreve dezena
 
 readU _ _ l endU
-endU 0 _ l endU
-endU # _ * end
+endU # _ l endU
 
-end _ 0 * end
+endU * * * end  ; para no ultimo algarismo
 
-; > ./MT1/exemplos/main.txt
+end _ 0 * end   ; resultado nulo, escreve zero
+
