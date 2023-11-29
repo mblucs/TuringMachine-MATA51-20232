@@ -312,3 +312,5 @@ endD _8 8_ ll endD
 endD _9 9_ ll endD
 
 endD __ __ rr end
+
+end __ 0_ ** end

@@ -350,9 +350,9 @@ readX1 0 0 r readX1
 readX0 _ _ r wrX1
 
 wrX1 0 1 r wrX1
-wrX1 F _ r endX     ; F q separa a comparação
+wrX1 F 0 r endX     ; F q separa a comparação
 
-endX * _ r endX
+endX * 0 r endX
 endX _ _ l initU
 
 ; = 24
@@ -376,6 +376,7 @@ wrX0 _ 1 l initU
 
 ; Converte de unario para decimal: resultado final à esquerda
 
+initU 0 _ l initU
 initU 1 1 l initU
 initU _ # r readU
 
@@ -403,5 +404,6 @@ readU _ _ l endU
 endU 0 _ l endU
 endU # _ * end
 
+end _ 0 * end
 
 ; > ./MT1/exemplos/main.txt
