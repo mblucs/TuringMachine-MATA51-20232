@@ -16,7 +16,7 @@
 
 ;-------------------------------
 
-#Q = {init, initC, unitC, decC, centC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
+#Q = {init, initC, unitC, decC, centC, zeroC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #q0 = init
@@ -58,7 +58,13 @@ decC 61 51 rr unitC   ;165
 
 ; centena
 centC 11 _1 rr initC
-decC __ __ ** init
+
+decC __ __ r* zeroC
+
+zeroC 0_ _+ *r init 
+;=
+;zeroC 0_ _+ *r zeroC
+;zeroC __ _0 rr init
 
 ; Leste(+) ou Oeste(-)?
 unitC L_ _+ lr unitC
@@ -80,6 +86,7 @@ endC _* _* ll endC
 endC __ __ ** writeC    
 
 writeC __ __ *r writeC  ; Começa a escrever
+writeC _0 __ *r writeC  
 writeC _+ +_ rr writeC  
 writeC _- -_ rr writeC  
 writeC _1 1_ rr writeC  
@@ -103,6 +110,7 @@ reverse -_ ++ r* num
 
 ; Percorre até o final do NUMERO
 num 1* 1* r* num
+num 0* 0* r* num
 
 ; Adição: adiciona 1 no espaço e subtrai no final
 num -- 11 r* one 
@@ -130,6 +138,9 @@ sub +1 -1 r* add
 add _1 1_ rr add
 
 sub 1_ 1_ ** endT
+
+; não há oq subtrair. GMT0
+sub __ __ l* endT
 
 ; #### FIM dif_time.tm
 ;-------------------------------
