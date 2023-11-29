@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, end}
+#Q = {initC, readC, readDecC, wrCL, wrCO, wrC1, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, initU, readU, wrU, wrU0, endU, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -353,7 +353,7 @@ wrX1 0 1 r wrX1
 wrX1 F _ r endX     ; F q separa a comparação
 
 endX * _ r endX
-endX _ _ * end
+endX _ _ l initU
 
 ; = 24
 readX1 _ _ l initX1
@@ -362,7 +362,7 @@ readX1 _ _ l initX1
 initX1 0 _ l initX1
 initX1 F _ l initX1
 
-initX1 1 1 r end
+initX1 1 1 l initU
 initX1 _ 0 * end
 
 ; < 0
@@ -371,11 +371,37 @@ readX0 - _ r wrX0   ;resultado negativo. escrever 1 a esq do prox 1
 wrX0 0 _ r wrX0
 wrX0 F _ r wrX0
 wrX0 1 1 l wrX0
-wrX0 _ 1 l end
+wrX0 _ 1 l initU
 
 
-; Converte de unario para decimal: resultado final
+; Converte de unario para decimal: resultado final à esquerda
 
+initU 1 1 l initU
+initU _ # r readU
+
+readU # # r readU
+readU 0 0 r readU
+readU 1 0 l wrU
+
+wrU # # l wrU
+wrU 0 0 l wrU
+
+wrU _ 1 r readU
+wrU 1 2 r readU
+wrU 2 3 r readU
+wrU 3 4 r readU
+wrU 4 5 r readU
+wrU 5 6 r readU
+wrU 6 7 r readU
+wrU 7 8 r readU
+wrU 8 9 r readU
+wrU 9 0 l wrU0  
+
+wrU0 _ 1 l readU ; escreve dezena
+
+readU _ _ l endU
+endU 0 _ l endU
+endU # _ * end
 
 
 ; > ./MT1/exemplos/main.txt
