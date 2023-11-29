@@ -409,4 +409,3 @@ endU # _ l endU
 endU * * * end  ; para no ultimo algarismo
 
 end _ 0 * end   ; resultado nulo, escreve zero
-
