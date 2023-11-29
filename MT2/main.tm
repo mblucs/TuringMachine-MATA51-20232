@@ -1,4 +1,4 @@
-; ./emulator/turing ./MATA51/main.tm C90L_C150O_P2_D4_#   
+; ./emulator/turing ./MT2/main.tm [entrada]
 
 ; Entrada: C90L_C30L_P8_D1_#
 ; Saída: 3
