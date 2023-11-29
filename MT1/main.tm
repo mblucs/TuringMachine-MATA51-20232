@@ -308,7 +308,7 @@ endE + 0 r wrF2    ; FIM. resultado zero
 
 
 ; Módulo de comparação. ; Verifica se o resultado esta entre 0 e 24. subtraindo o resultado por 24
-    ; Fita: [resultado] "-24F" 
+; Fita: [resultado] "-24F" 
 
 wrF2 _ 2 r wrF4
 wrF4 _ 0 r wrF        ; Escreve 20 e substitui os 0 por 1 no final, totalizando 23.
@@ -340,7 +340,7 @@ wrF1 _ 1 l readF
 readF 1 1 l readF
 readF F F l unitF
 
-    ; Fita: [resultado] "-000" [1^24]     
+; Fita: [resultado] "-000" [1^24]     
 
 decF 0 1 r decF 
 decF F 1 l initX     
