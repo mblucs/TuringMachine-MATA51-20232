@@ -2,7 +2,7 @@
 ; ./emulator/turing ./MT1/main.tm C30O_C60L_P2_D5_# -v
 
 
-#Q = {init, initI, readI0, initIC, initI0, wrI, wrI1, wrI2, wrI3, wrI4, wrI5, wrI6, wrI7, wrI8, wrI9, wrIO, wrIL, wrID, wrIP, wrIC, readI, endI, end}
+#Q = {init, initI, readI0, initIC, initI0, wrI, wrI1, wrI2, wrI3, wrI4, wrI5, wrI6, wrI7, wrI8, wrI9, wrIO, wrIL, wrIX, wrID, wrIP, wrIC, readI, endI, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -11,7 +11,7 @@
 
 #q0 = init
 
-; -----------
+; ---------------
 
 ; duplica os espaços para conseguir escrever os IDs
 
@@ -22,7 +22,10 @@ initIC _ C r initI
 ; move o cabeçote para a direita até encontrar _
 initI * * r initI
 initI _ # r readI0    
-initI # # l wrID         ; fim da entrada 
+initI # # r wrIX         ; fim da entrada 
+
+wrIX _ # l wrIX
+wrIX # _ l wrID
 
 ; move o cabeçote para a direita até encontrar #
 readI0 * *  r readI0
@@ -77,3 +80,5 @@ wrIC # C l endI
 
 endI * * l endI
 endI C C * end
+
+; ---------------

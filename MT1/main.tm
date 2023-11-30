@@ -12,7 +12,7 @@
 ; #F  = estado final
 ; #N  = numero de fitas
 
-#Q = {init, initI, readI0, initIC, initI0, wrI, wrI0, wrI1, wrI2, wrI3, wrI4, wrI5, wrI6, wrI7, wrI8, wrI9, wrIO, wrIL, wrID, wrIP, wrIC, readI, endI, initC, readC, readDecC, wrCL, wrCO, wrC1, readC0, wrC0, wrC01, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, initU, readU, wrU, wrU0, endU, end}
+#Q = {init, initI, readI0, initIC, initI0, wrI, wrI0, wrI1, wrI2, wrI3, wrI4, wrI5, wrI6, wrI7, wrI8, wrI9, wrIO, wrIL, wrIX, wrID, wrIP, wrIC, readI, endI, initC, readC, readDecC, wrCL, wrCO, wrC1, readC0, wrC0, wrC01, subDecC, subCentC, addUnitC, endC, wrR, wrN, wrP, wr1, readR, clear, next, initT, readTN, readTP, readT0, readT1, subT1, addT1, initH, readH, unitH, decH, wrH1, addH1, endH, initD, endD, readD, readD1, wrD1, initE, readE, wrEP, wrEN, readR1, wrR1, readM, readM0, readM1, subM1, addM1, endM, endE, wrF, wrF2, wrF4, unitF, wrF1, decF, addF1, readF, initX, readX0, readX1, wrX1, wrX0, endX, initX1, initU, readU, wrU, wrU0, endU, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,F,X}
 #B = _
@@ -33,7 +33,10 @@ initIC _ C r initI
 ; move o cabeçote para a direita até encontrar _
 initI * * r initI
 initI _ # r readI0    
-initI # # l wrID         ; fim da entrada 
+initI # # r wrIX         ; fim da entrada 
+
+wrIX _ # l wrIX
+wrIX # _ l wrID
 
 ; move o cabeçote para a direita até encontrar #
 readI0 * *  r readI0
