@@ -34,7 +34,7 @@ initI D_ PD *r initI
 initI P_ CP *r initI          
 initI C_ _C *r initI          
 initI __ C# r* nextI          
-         
+
 nextI *# *# r* nextI
 nextI _# __ r* readI
 
@@ -115,9 +115,6 @@ centC 11 _1 rr initC
 decC __ __ r* zeroC
 
 zeroC 0_ _+ *r init 
-;=
-;zeroC 0_ _+ *r zeroC
-;zeroC __ _0 rr init
 
 ; Leste(+) ou Oeste(-)?
 unitC L_ _+ lr unitC
