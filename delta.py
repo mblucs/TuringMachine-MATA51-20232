@@ -40,20 +40,21 @@ for line in file:
                 d += "*"
 
         if (len(i)==1):  # 1 fita
-            ans = (f"({Q}, {i}) = ({E}, {s}, {d})\n")
+            ans = (f"({Q}, {i}) = ({E}, {s}, {d})")
 
         else:           # 2 fitas
-            ans = (f"({Q}, {i[0]}, {i[1]}) = ({E}, {s[0]}, {d[0]}, {s[1]}, {d[1]})\n")
+            ans = (f"({Q}, {i[0]}, {i[1]}) = ({E}, {s[0]}, {d[0]}, {s[1]}, {d[1]})")
 
-        # Latex:  $(Estado, f1, f2) = (newEst, r1, E1, r2, E2)$
-
-        # ans = (f"$({Q}, {i[0]}, {i[1]}) = ({E}, {s[0]}, {d[0]}{f2})$\\\\\n")
-        # ans = ans.replace("_", "\_")
-        # ans = ans.replace("#", "\#")
+        # Latex:  $(Estado, f1, f2) = (newEst, r1, d1, r2, d2)$
+        # ans = (f"${({Q}, {i[0]}, {i[1]}) = ({E}, {s[0]}, {d[0]}{f2})}$\\\\\n")
+        ans = (f"${ans}$\\\\")
+        ans = ans.replace("_", "\_")
+        ans = ans.replace("#", "\#")
 
         # Markdown: (Estado, f1, f2) = (newEst, r1, E1, r2, E2)
         # ans = (f"({Q}, {i[0]}{, {i[1]}}) = ({E}, {s[0]}, {d[0]}{f2})\n")
 
+        ans +="\n"
 
     with open(file_out, 'a') as w:
         w.write(ans)
