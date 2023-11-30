@@ -1,3 +1,4 @@
+; ./emulator/turing ./MT1/main.tm 30O_60L_2_5# -v
 ; ./emulator/turing ./MT1/main.tm C30O_C60L_P2_D5_# -v
 
 ;-------------------------------
