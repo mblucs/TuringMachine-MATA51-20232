@@ -1,22 +1,22 @@
 ; ./emulator/turing ./MT2/main.tm [entrada]
 
-; Entrada: C90L_C30L_P8_D1_#
+; Entrada: 90L_30L_8_1_#
 ; Saída: 3
 
-; Entrada: C90L_C30L_P3_D1_#
+; Entrada: 90L_30L_3_1_#
 ; Saída: 22
 
-; Entrada: C75O_C15L_P15_D8_# 
+; Entrada: 75O_15L_15_8_# 
 ; Saída: 5
 
 
-; Entrada: C90L_C150O_P2_D4_#
+; Entrada: 90L_150O_2_4_#
 ; Saída: 6
 
 
 ;-------------------------------
 
-#Q = {init, initC, unitC, decC, centC, zeroC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
+#Q = {init, initI, nextI, readI, writeI, endI, initC, unitC, decC, centC, zeroC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
 #S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
 #G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
 #q0 = init
@@ -26,6 +26,59 @@
 
 
 ;-------------------------------
+
+init *_ *# l* initI     ; move para esquerda para escrever comandos
+
+initI _# D# *r initI          
+initI D_ PD *r initI          
+initI P_ CP *r initI          
+initI C_ _C *r initI          
+initI __ C# r* nextI          
+         
+nextI *# *# r* nextI
+nextI _# __ r* readI
+
+readI 0_ _0 rr readI
+readI 1_ _1 rr readI
+readI 2_ _2 rr readI
+readI 3_ _3 rr readI
+readI 4_ _4 rr readI
+readI 5_ _5 rr readI
+readI 6_ _6 rr readI
+readI 7_ _7 rr readI
+readI 8_ _8 rr readI
+readI 9_ _9 rr readI
+readI L_ _L rr readI
+readI O_ _O rr readI
+readI __ __ rr readI
+readI #_ _# r* writeI
+
+writeI _0 0_ ll writeI
+writeI _1 1_ ll writeI
+writeI _2 2_ ll writeI
+writeI _3 3_ ll writeI
+writeI _4 4_ ll writeI
+writeI _5 5_ ll writeI
+writeI _6 6_ ll writeI
+writeI _7 7_ ll writeI
+writeI _8 8_ ll writeI
+writeI _9 9_ ll writeI
+writeI _L L_ ll writeI
+writeI _O O_ ll writeI
+writeI __ __ ll writeI
+writeI _# #_ ll writeI
+
+;escreve comandos
+writeI _C C# r* nextI
+writeI _P P# r* nextI
+writeI _D D# r* endI
+
+endI *# *# l* endI
+endI C# C_ ll endI
+endI __ __ rr init
+
+;-------------------------------
+
 
 init C_ __ r* initC  ; Inicia função das coordenadas 
 
