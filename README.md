@@ -4,10 +4,13 @@ Projeto final de teoria da computação
 [Emulador](https://github.com/StardustDL/turing-machine-emulator.git)
 
 
-## Executar a máquina
+## Executar a máquina 
 ```
-$ ./emulator/turing ./MATA51/<nome_do_arquivo> <entrada> <flags>
+$ ./emulator/turing ./MATA51/MT1/main.tm <entrada> <flags>
+$ ./emulator/turing ./MATA51/MT2/main.tm <entrada> <flags>
 ```
+MT1 é uma máquina de uma fita;
+MT2 é uma máquina de duas fitas;
 
 Flags possíveis:
 

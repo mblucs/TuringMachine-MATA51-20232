@@ -25,6 +25,7 @@
 ;-------------------------------
 ; #### coord.tm
 
+; estado inicial, entrada, saida, direcao, estado novo
 
 initC * * r initC
 initC C # r initC ; # irá separar o resultado da entrada
