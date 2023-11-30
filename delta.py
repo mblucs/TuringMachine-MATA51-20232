@@ -4,7 +4,7 @@ import sys
 
 file_inp = sys.argv[1]
 file_out = sys.argv[2]
-latex = True 
+latex = False 
 
 file = open(file_inp, "r")
 open(file_out, 'w').close()
