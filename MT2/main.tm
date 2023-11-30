@@ -17,8 +17,8 @@
 ;-------------------------------
 
 #Q = {init, initI, nextI, readI, writeI, endI, initC, unitC, decC, centC, zeroC, endC, writeC, initT, reverse, num, one, sub, add, endT, initH, unitH, decH, endH, writeH, writeD, writeO, addD, addR, subR, initF, endF, day, nday, initD, unitD, decD, endD, endDay, zero, end}
-#S = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D}
-#G = {_,C,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,P,D,H,F}
+#S = {_,0,1,2,3,4,5,6,7,8,9,L,O,#}
+#G = {_,0,1,2,3,4,5,6,7,8,9,L,O,+,-,#,C,P,D,H,F}
 #q0 = init
 #B = _
 #F = {end}
