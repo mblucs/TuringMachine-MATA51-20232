@@ -4,7 +4,7 @@ import sys
 
 file_inp = sys.argv[1]
 file_out = sys.argv[2]
-latex = False 
+latex = True 
 
 file = open(file_inp, "r")
 open(file_out, 'w').close()
@@ -49,7 +49,7 @@ for line in file:
         # Latex:  $(Estado, f1, f2) = (newEst, r1, d1, r2, d2)$
         # ans = (f"${({Q}, {i[0]}, {i[1]}) = ({E}, {s[0]}, {d[0]}{f2})}$\\\\\n")
         if latex:
-            ans = (f"${ans}$\\\\")
+            ans = (f"\par ${ans}$")
             ans = ans.replace("_", "\_")
             ans = ans.replace("#", "\#")
 
